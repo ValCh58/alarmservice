@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div th:fragment="modal_edit_group">
+		<div class="modal modal-warning fade in" id="modalEditGroupName" data-backdrop="static" data-keyboard="false" tabindex="-1">
+			<form id="modalFormEditGroup">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Редактирование параметров групп аварий</h5>
+							<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+						<div class="modal-body">
+							<div class="form-group"><!-- ID AlarmGroup -->
+								<input value="" type="hidden" class="form-control" id="id_Alarm_Group" name="idAlarmGroup"
+								/>
+							</div>
+							<div class="form-group">
+								<label for="title">Номер группы аварий:</label> 
+								<input value="" type="text" class="form-control" id="id_Group" name="idGroup" required
+								/>
+							</div>
+							<div class="form-group">
+								<label for="title">Название группы:</label> 
+								<input value="" type="text" class="form-control" id="name_Group" name="nameGroup" required
+								/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+								<input type="submit" class="btn btn-primary" value="Сохранить"/>
+							</div>
+						</div>
+                    </div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

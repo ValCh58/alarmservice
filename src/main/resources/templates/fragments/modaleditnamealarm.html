@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div th:fragment="modal_edit_name_alarm">
+		<div class="modal modal-warning fade in" id="modalEditNameAlarm" data-backdrop="static" data-keyboard="false" tabindex="-1">
+			<form id="modalFormEditAlarmName">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Редактирование параметров аварий</h5>
+							<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						
+						<div class="modal-body">
+						<!-- 						      <div class="row">
+						         <div class="col-auto text-nowrap">
+						           <label for="id_Alarm_Group" class="col-sm-1 col-form-label" 
+						                  style="text-align: right;font-size: 1.2rem;">Номер группы:</label>
+							     </div>
+							     <div class="col-auto">
+							       <input value="" style="font-size: 1.2rem;text-align: left;" type="text" 
+							              readonly class="form-control-plaintext" id="id_Alarm_Group" name="idAlarmGroup"/>
+							     </div>
+						      </div>
+						   --> 
+						      
+							<div class="form-group">
+								<input value="" type="hidden" class="form-control" id="id_Alarm_Name" name="idAlarmName"
+								/>
+							</div>
+							<div class="form-group">
+								<label for="id_Alarm">Номер аварии в группе:</label> 
+								<input value="" type="text" class="form-control" id="id_Alarm" name="idAlarm" required
+								/>
+							</div>
+							<div class="form-group">
+								<label for="alarm_Name">Название аварии в группе:</label> 
+								<input value="" type="text" class="form-control" id="alarm_Name" name="alName" required
+								/>
+							</div>
+							
+							<div class="form-group">
+								<input value="" type="hidden" class="form-control" id="id_Alarm_Group" name="idAlarmGroup"
+								/>
+							</div>
+														
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+								<input type="submit" class="btn btn-primary" value="Сохранить"/>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

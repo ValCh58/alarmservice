@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Редактирование групп и аварий</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<style>
+.form-signin {
+    max-width: 80%;
+    padding: 10px 18px 16px;
+    background-color: rgba(233, 234, 234, 0.6);
+    border: dotted; 
+    border-color: rgba(133, 134, 234, 0.1);
+    margin: 0 auto;
+}
+</style>
+</head>
+<body>
+    
+    <!----------------------------------Модальное окно редактирования групп аварий---------------------------->
+    <div th:insert="~{fragments/modaleditgroup :: modal_edit_group}"></div>
+    <!----------------------------------Модальное окно редактирования аварий---------------------------------->
+    <div th:insert="~{fragments/modaleditnamealarm :: modal_edit_name_alarm}"></div>
+    <!------------------------------- Модальное окно для предупреждения об удалении -------------------------->
+    <div th:insert="~{fragments/warningdelobj :: warning_del_obj}"></div>
+        
+	<div class="container">
+		<div class="justify-content-center align-items-center" style="margin-top: 5px">
+			<div class="col-sm-12">
+				<div class="form-row mt-2 ml-1 mr-1">
+					<div class="row">
+						<div class="col text-nowrap">
+							<h5 style="text-align: right;">Редактор аварий</h5>
+						</div>
+						<div class="col">
+							<a th:href="@{/admin/home}" class="btn btn-primary btn-sm">Выход</a>
+						</div>
+					</div>
+				</div>
+				<div class="form-row mt-2 ml-1 mr-1 form-signin">
+				<div class="row justify-content-center" >
+				 <div class="col-auto">
+				   <table
+					   class="table table-primary table-condensed table-striped table-hover table-sm table-bordered 
+						      table-responsive-sm table-fixed caption-top"
+					      id="table-alarm-group">
+					   <caption style="font-size: 1.2rem;white-space: nowrap;">Таблица групп аварий
+					     <button type="button" onclick="openModalGroupAlarmNew();" class="btn btn-primary btn-sm" id="btn-new" title="Добавить"><i class="bi bi-newspaper"></i></button>
+					     <button type="button" onclick="openModalGroupAlarm();" class="btn btn-primary btn-sm" id="btn-edit" title="Редактировать"><i class="bi bi-pencil-square"></i></button>
+					     <button type="button" onclick="openModalWarningDelObj();" class="btn btn-danger btn-sm"  id="btn-delete" title="Удалить"><i class="bi bi-trash"></i></button>
+					   </caption>   
+					   <thead style="text-align: center;">
+						   <tr>
+							   <th>№</th>
+							   <th style="display: none;">id_alarm_group</th>
+							   <th>Номер</th>
+							   <th>Имя группы аварий</th>
+							   <th>Выбор</th>
+						   </tr>
+					   </thead>
+					   <tbody class="table-group-divider">
+						   <tr th:each="cnt,idxStat : *{listAlarmGroup}">
+							   <td th:text="${idxStat.index + 1}" style="text-align: right;"></td>
+							   <td style="display: none;" th:text="${cnt.idAlarmGroup}"></td>
+							   <td th:text="${cnt.idGroup}" style="text-align: right;"></td>
+							   <td th:text="${cnt.nameGroup}"></td>
+							   <td style="text-align: center;"><input type="radio" name="options" onclick=getIdGroup(this)></td>
+						   </tr>
+					   </tbody>
+				   </table>
+				 </div>
+				 <div class="col-auto">
+				   <table class="table table-secondary table-condensed table-striped table-hover table-sm table-bordered 
+						      table-responsive-sm table-fixed caption-top"
+					      id="table-alarm-name">
+					 <caption style="font-size: 1.2rem;white-space: nowrap;">Таблица аварий в группе
+					   <button type="button" onclick=null class="btn btn-primary btn-sm" id="btn-new-item" title="Добавить"><i class="bi bi-newspaper"></i></button>
+					     <button type="button" onclick="openModalNameAlarm();" class="btn btn-primary btn-sm" id="btn-edit-item" title="Редактировать"><i class="bi bi-pencil-square"></i></button>
+					     <button type="button" onclick=null class="btn btn-danger btn-sm" id="btn-delete-item" title="Удалить"><i class="bi bi-trash"></i></button>
+					 </caption>     
+				     <thead style="text-align: center;">
+				       <tr>
+				         <th>№</th>
+				         <th style="display: none;">id_alarm_name</th>
+				         <th>Номер</th>
+				         <th>Имя аварии</th>
+				         <th style="display: none;">id_alarm_group</th>
+				         <th>Выбор</th>
+				       </tr>  
+				     </thead>
+				     <tbody class="table-group-divider">
+				       <tr th:each="cnt,idxStat : *{listAlarmName}"> 
+				         <td th:text="${idxStat.index + 1}" style="text-align: right;"></td>
+				         <td style="display: none;" th:text="${cnt.idAlarmName}"></td>
+				         <td th:text="${cnt.idAlarm}" style="text-align: right;"></td>
+				         <td th:text="${cnt.alName}"></td>
+				         <td style="display: none;" th:text="${cnt.idAlarmGroup}"></td>
+				         <td style="text-align: center;"><input type="radio" name="options1" onclick=getIdGroupName(this)></td>
+				       </tr>
+				     </tbody>
+				   </table> 
+				 </div>
+				</div> 
+				</div>
+			</div>
+		</div>
+	</div>
+    
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+		    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+		    crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+		    integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+		    crossorigin="anonymous"></script>
+   <!-- Для обеспечения работы $.ajax -->
+   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> 
+   
+   <script>
+   //** заполнение переменных при клике на радио кнопки в столбцах выбрать
+   var idGroup = 0,//#table-alarm-group
+       idGroupName = -1,//#table-alarm-name
+       idAlarmGroup = 0;//#table-alarm-group
+
+    
+   $(document).ready(function(){
+	   setEmptyData();//Заполнение таблицы #table-alarm-name пустой записью
+   });
+
+   //** Добавление в таблицу #table-alarm-name пустой записи 
+   function setEmptyData(){
+	   var tableBody = $("#table-alarm-name tbody");
+   	   tableBody.empty();
+	   $("#table-alarm-name tbody").append(
+	   			"<tr>" + "<td style=\"text-align: right;\">" + '0' + "</td>" + 
+	   			         "<td  style=\"display: none;\">" + '-1' + "</td>" + 
+	   			         "<td style=\"text-align: right;\">" + '0' + "</td>" + 
+	   			         "<td>" + 'Нет данных в запросе' + "</td>" +
+	   			         "<td style=\"display: none;\">"+'0'+"</td>" +
+	   			         "<td style=\"text-align: center;\"><input type=\"radio\" name=\"options1\" onclick=\"getIdGroupName(this);\"></td>" +
+	   			"</tr>" 
+	  	);
+   }
+
+    //** Присвоим переменной значение ячейки из #table-alarm-group
+    function getIdGroup(obj){
+       idGroup = obj.parentNode.parentNode.cells[2].innerText;
+       idAlarmGroup = obj.parentNode.parentNode.cells[1].innerText;
+       qToGroupName(); 
+       console.log('idGroup = ' + idGroup);
+       console.log('idAlarmGroup = ' + idAlarmGroup);
+      }
+
+  //** Присвоим переменной значение ячейки из #table-alarm-name
+    function getIdGroupName(obj){
+        idGroupName = obj.parentNode.parentNode.cells[1].innerText;
+        console.log('idGroupName = ' + idGroupName);
+        }
+
+    //** Получение данных для заполнения #table-alarm-name
+    function qToGroupName(){
+    	$.ajax({
+	        "type": "get",
+	        "url": '/admin/fromAlarmName/idGroup/'+idGroup,
+	        "dataType": "json",
+	        "cache": "false",
+	        "data": "$(this).serialize()",
+	        success: function (data) {
+	        	if(data.length == 0){
+		            setEmptyData();
+		            idGroupName = -1;
+                    return false;
+			    }
+	        	//Удалим тело таблицы/////////////////
+	        	var tableBody = $("#table-alarm-name tbody");
+   	            tableBody.empty();
+	        	//Вставим новые записи////////////////
+	        	$.each(data, function (idx, obj){
+	        		$("#table-alarm-name tbody").append(
+	        				"<tr>" + "<td style=\"text-align: right;\">" + (idx+1) + "</td>" + 
+	      			         "<td  style=\"display: none;\">" + obj.idAlarmName + "</td>" + 
+	      			         "<td style=\"text-align: right;\">" + obj.idAlarm + "</td>" + 
+	      			         "<td>" + obj.alName + "</td>" +
+	      			         "<td style=\"display: none;\">" + obj.idAlarmGroup + "</td>" +
+	      			         "<td style=\"text-align: center;\"><input type=\"radio\" name=\"options1\" onclick=\"getIdGroupName(this);\"></td>" +
+	      			  "</tr>" 
+	        		);
+	        	});
+	        },
+	        error: function (x, e) {
+	        	var tableBody = $("#table-alarm-name tbody");
+	        	alert('Данные не найдены.');
+                setEmptyData();
+            }
+	    });
+     }
+
+    //** Запрос данных для формы modaleditgroup/modalFormEditGroup
+    function qToModalEditGroupAlarm(){
+	   $.ajax({
+	        "type": "get", 
+	        "url": '/admin/fromGroupAlarm/idGroupAlarm/'+idGroup,
+	        "dataType": "json",
+	        "cache": "false",
+	        "data": "$(this).serialize()",
+	        success: function (data) {
+	        	if(data.length == 0){
+	        		alert('Данные не найдены.');
+                   return false;
+			    }
+	        	//Вставим данные в поля формы////////////////
+	        	$('#modalEditGroupName #id_Alarm_Group').val(data.idAlarmGroup);
+	        	$('#modalEditGroupName #id_Group').val(data.idGroup);
+	        	$('#modalEditGroupName #name_Group').val(data.nameGroup);
+	        },
+	        error: function (x, e) {
+	        	alert('Произошла ошибка при выполнении запроса. Данные не найдены.');
+           }
+	    });
+    }
+
+    //************ Названия групп аварий ********************************//
+    //** Сохранение данных для формы modaleditgroup/modalFormEditGroup **//
+    $('#modalFormEditGroup').on('submit', function(){
+         $.ajax({
+      		url: "/admin/UpdOrInsAlarmGroup",
+      		method: "POST",
+      		dataType: "json",
+      		cache: false,
+      		data: $(this).serialize(),
+      		success: function(data){
+          		//Обновим отредактируемую строку в таблице/////////// 
+      			var table, tr, td, i, isUpd = false, cntMax;
+                table = document.getElementById("table-alarm-group");
+          	    tr = table.getElementsByTagName("tr");
+          	    cntMax = tr.length;// Максимальный номер строки в таблице //
+          	    for (i = 0; i < tr.length; i++) {
+          		  td = tr[i].getElementsByTagName("td")[2];
+          		  if (td) {
+              		  var valID = td.innerText;
+              		  if(valID == data.idGroup){
+              			 tr[i].getElementsByTagName("td")[1].innerHTML = data.idAlarmGroup;
+              			 tr[i].getElementsByTagName("td")[2].innerHTML = data.idGroup;
+              			 tr[i].getElementsByTagName("td")[3].innerHTML = data.nameGroup;
+              			 isUpd = true;// Флаг редактирования записи в таблице
+              			 break;
+                  	  }
+              	 }       
+          	   }
+           	   if(!isUpd){// Добавление новой записи в таблицу #table-alarm-group 
+           		$("#table-alarm-group tbody").append(
+        		  "<tr>" + 
+        		         "<td style=\"text-align: right;\">" + (cntMax+1) + "</td>" + 
+      			         "<td  style=\"display: none;\">" + data.idAlarmGroup + "</td>" + 
+      			         "<td style=\"text-align: right;\">" + data.idGroup + "</td>" + 
+      			         "<td>" + data.nameGroup + "</td>" +
+      			         "<td style=\"text-align: center;\"><input type=\"radio\" name=\"options\" onclick=\"getIdGroup(this);\"></td>" +
+      			  "</tr>" 
+        		);
+               }
+           	}
+      	});
+       	$("#modalEditGroupName").modal('hide');
+        return false;
+    });
+
+  //************* Названия аварий в группе ************************************//
+  //** Сохранение данных для формы modaleditnamealarm/modalFormEditAlarmName **//
+    $('#modalFormEditAlarmName').on('submit', function(){
+         $.ajax({
+      		url: "/admin/UpdOrInsAlarmName",
+      		method: "POST",
+      		dataType: "json",
+      		cache: false,
+      		data: $(this).serialize(),
+      		success: function(data){
+          		//Обновим отредактируемую строку в таблице/////////// 
+      			var table, tr, td, i, isUpd = false, cntMax;
+                table = document.getElementById("table-alarm-name");
+          	    tr = table.getElementsByTagName("tr");
+          	    cntMax = tr.length;// Максимальный номер строки в таблице //
+          	    for (i = 0; i < tr.length; i++) {
+          		  td = tr[i].getElementsByTagName("td")[2];
+          		  if (td) {
+              		  var valID = td.innerText;
+              		  if(valID == data.idAlarm){
+              			 tr[i].getElementsByTagName("td")[1].innerHTML = data.idAlarmName;
+              			 tr[i].getElementsByTagName("td")[2].innerHTML = data.idAlarm;
+              			 tr[i].getElementsByTagName("td")[3].innerHTML = data.alName;
+              			 tr[i].getElementsByTagName("td")[4].innerHTML = data.idAlarmGroup;
+              			 isUpd = true;// Флаг редактирования записи в таблице
+              			 break;
+                  	  }
+              	 }       
+          	   }
+           	   if(!isUpd){// Добавление новой записи в таблицу #table-alarm-group 
+           		$("#table-alarm-name tbody").append(
+        		  "<tr>" + 
+        		         "<td style=\"text-align: right;\">" + (cntMax+1) + "</td>" + 
+      			         "<td  style=\"display: none;\">" + data.idAlarmName + "</td>" + 
+      			         "<td style=\"text-align: right;\">" + data.idAlarm + "</td>" + 
+      			         "<td>" + data.alName + "</td>" +
+      			         "<td  style=\"display: none;\">" + data.idAlarmGroup + "</td>" +
+      			         "<td style=\"text-align: center;\"><input type=\"radio\" name=\"options1\" onclick=\"getIdGroup(this);\"></td>" +
+      			  "</tr>" 
+        		);
+               }
+           	}
+      	});
+       	$("#modalEditNameAlarm").modal('hide');
+        return false;
+    });
+    
+
+   //** Запрос данных для формы modaleditnamealarm/modalFormEditAlarmName
+   function qToModalEditNameAlarm(){
+	   $.ajax({
+	        "type": "get", 
+	        "url": '/admin/rowFromAlarmName/idNameAlarm/'+idGroupName,
+	        "dataType": "json",
+	        "cache": "false",
+	        "data": "$(this).serialize()",
+	        success: function (data) {
+	        	if(data.length == 0){
+	        		alert('Данные не найдены.');
+                  return false;
+			    }
+	        	//Вставим данные в поля формы////////////////
+	        	$('#modalEditNameAlarm #id_Alarm_Name').val(data.idAlarmName);
+	        	$('#modalEditNameAlarm #id_Alarm').val(data.idAlarm);
+	        	$('#modalEditNameAlarm #alarm_Name').val(data.alName);
+	        	$('#modalEditNameAlarm #id_Alarm_Group').val(data.idAlarmGroup);
+	        },
+	        error: function (x, e) {
+	        	alert('Произошла ошибка при выполнении запроса. Данные не найдены.');
+          }
+	    });
+   }
+
+   
+   //** Отрытие модального окна для редактирования modaleditgroup/modalFormEditGroup
+   function openModalGroupAlarm(){
+	   if(idGroup == 0){
+		  alert("Не выбрана группа аварий!"); 
+       	  return;
+       }
+	   $("#modalEditGroupName").modal('show');	 
+	   qToModalEditGroupAlarm();    
+   }
+
+   //** Отрытие модального окна для редактирования modaleditnamealarm/modalFormEditAlarmName
+   function openModalNameAlarm(){
+	   if(idGroupName == -1) {
+           alert("Не выбрана авария в группе!");
+		   return;
+	   }
+       $("#modalEditNameAlarm").modal('show');   
+       qToModalEditNameAlarm();  
+   }
+   
+   //** Открытие мод окна для добавления новой записи modaleditgroup/modalFormEditGroup
+   function openModalGroupAlarmNew(){
+	   
+       	$("#modalEditGroupName").modal('show');  
+       	$('#modalEditGroupName #id_Alarm_Group').val(0);
+    	$('#modalEditGroupName #id_Group').val(0);
+    	$('#modalEditGroupName #name_Group').val(''); 
+   }
+
+
+   //** Вызов модального окна для предупреждения об удалении строки
+   function openModalWarningDelObj(){
+	   if(idGroup == 0) {
+           alert("Не выбрана авария в группе!");
+		   return;
+	   }
+	   $("#modal-warning-obj").modal('show');
+   }
+   
+   //** Удаление строки из таблицы AlarmGroup
+   function deleteRow(){
+	   $("#modal-warning-obj").modal('hide');
+       
+	   $.ajax({
+     		url: '/admin/delRowAlarmGroup/idAlarmGroup/'+idAlarmGroup+'/idGroup/'+idGroup,
+     		method: "POST",
+     		dataType: "json",
+     		cache: false,
+     		data: $(this).serialize(),
+     		success: function(data){
+         		if(data == false){
+             		alert('Нельзя удалить строку, у нее есть подчиненные записи!'); 
+             		return false;
+         		}
+     			//Удалим отредактируемую строку в таблице///////////
+     			var table, tr, td, i;
+                table = document.getElementById("table-alarm-group");
+         	    tr = table.getElementsByTagName("tr");
+         	    for (i = 0; i < tr.length; i++) {
+         		  td = tr[i].getElementsByTagName("td")[2];
+         		  if (td) {
+             		  var valID = td.innerText;
+             		  if(valID == idGroup){
+             			tr[i].remove();
+             			 break;
+                 	  }
+             	 }       
+         	   }
+          	}
+     	});
+       return false;
+   } 
+    
+   </script>
+</body>
+</html>
