@@ -105,9 +105,21 @@ public class GetDataFromAlarm {
 				alarmName = srvAlarmGroup.srvUpdAlarmName(an);
 			 }
 			 else {//insert
-				 ;//alarmName = srvAlarmGroup.srvInsAlarmGroup(an);;
+				 alarmName = srvAlarmGroup.srvInsAlarmName(an);
 			 }
 			 return ResponseEntity.status(OK).body(alarmName);
+		 }
+		 
+		 /**
+		  * Удаление записи из таблицы AlarmName idGroupName 
+		  * 
+		  */
+		 @PostMapping(value="/admin/delRowAlarmGroup/idAlarmGroup/{idAlarmGroup}/idGroup/{idGroup}")
+		 public ResponseEntity<Boolean> delRowAlarmGroup(@PathVariable("idGroupName") Integer idGroupName) {
+			 
+	         
+	         return  retCheck ? ResponseEntity.status(OK).body(false) : 
+	        	                ResponseEntity.status(OK).body(srvAlarmGroup.deleteRowAlarmGroup(idAlarmGroup));
 		 }
 	
 }

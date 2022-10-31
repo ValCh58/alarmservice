@@ -96,5 +96,12 @@ public class SrvAlarmGroup {
     	return Optional.ofNullable(iAlarmName.save(alName)).
     			orElseThrow(()->new ResourceNotFoundException("Error update object AlarmName!"));
     }
+    
+    @Transactional
+    public AlarmName srvInsAlarmName(AlarmName an) {
+           AlarmName alarmName = Optional.ofNullable(iAlarmName.save(an)).
+    			orElseThrow(()->new ResourceNotFoundException("Error saving object AlarmName!"));
+    	return alarmName;
+    }
 
 }
