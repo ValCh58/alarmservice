@@ -103,5 +103,14 @@ public class SrvAlarmGroup {
     			orElseThrow(()->new ResourceNotFoundException("Error saving object AlarmName!"));
     	return alarmName;
     }
+    
+    @Transactional
+    public boolean deleteRowAlarmName(Integer idGroupName) {
+    	if(idGroupName == null) { 
+    		return false;
+    	}	
+    	iAlarmName.deleteById(idGroupName);
+    	return true;
+    }
 
 }

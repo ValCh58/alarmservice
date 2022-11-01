@@ -114,12 +114,11 @@ public class GetDataFromAlarm {
 		  * Удаление записи из таблицы AlarmName idGroupName 
 		  * 
 		  */
-		 @PostMapping(value="/admin/delRowAlarmGroup/idAlarmGroup/{idAlarmGroup}/idGroup/{idGroup}")
-		 public ResponseEntity<Boolean> delRowAlarmGroup(@PathVariable("idGroupName") Integer idGroupName) {
-			 
+		 @PostMapping(value="/admin/delRowAlarmName/idGroupName/{idGroupName}")
+		 public ResponseEntity<Boolean> delRowAlarmName(@PathVariable("idGroupName") Integer idGroupName) {
+			 boolean retCheck = srvAlarmGroup.deleteRowAlarmName(idGroupName);
 	         
-	         return  retCheck ? ResponseEntity.status(OK).body(false) : 
-	        	                ResponseEntity.status(OK).body(srvAlarmGroup.deleteRowAlarmGroup(idAlarmGroup));
-		 }
+	         return  retCheck ? ResponseEntity.status(OK).body(true) : ResponseEntity.status(OK).body(false); 
+	     }
 	
 }
