@@ -44,9 +44,9 @@
 						<h6 style="text-align: right;font-size: 1.0rem;white-space: nowrap;">Таблица групп аварий</h6>
 					</div>
 					<div class="col">
-					    <button type="button" onclick="openModalGroupAlarmNew();" class="btn btn-primary btn-sm btn-alr" id="btn-new" title="Добавить"><i class="bi bi-newspaper"></i></button>
-					    <button type="button" onclick="openModalGroupAlarm();" class="btn btn-primary btn-sm btn-alr" id="btn-edit" title="Редактировать"><i class="bi bi-pencil-square"></i></button>
-					    <button type="button" onclick="openModalWarningDelObj(1);" class="btn btn-danger btn-sm btn-alr"  id="btn-delete" title="Удалить"><i class="bi bi-trash"></i></button>
+					    <button type="button" onclick="openModalGroupAlarmNew();" class="btn btn-primary  btn-circle" id="btn-new" title="Добавить"><i class="bi bi-newspaper"></i></button>
+					    <button type="button" onclick="openModalGroupAlarm();" class="btn btn-primary btn-circle" id="btn-edit" title="Редактировать"><i class="bi bi-pencil-square"></i></button>
+					    <button type="button" onclick="openModalWarningDelObj(1);" class="btn btn-danger btn-circle"  id="btn-delete" title="Удалить"><i class="bi bi-trash"></i></button>
 					</div>
 				 </div>
 				 <table class="table table-primary table-condensed table-striped table-hover table-sm table-bordered 
@@ -78,9 +78,9 @@
 						<h6 style="text-align: right;font-size: 1.0rem;white-space: nowrap;">Таблица аварий в группе</h6>
 					</div>
 					<div class="col">
-					    <button type="button" onclick="openModalAlarmNameNew();" class="btn btn-primary btn-sm btn-alr" id="btn-new-item" title="Добавить"><i class="bi bi-newspaper"></i></button>
-					    <button type="button" onclick="openModalNameAlarm();" class="btn btn-primary btn-sm btn-alr" id="btn-edit-item" title="Редактировать"><i class="bi bi-pencil-square"></i></button>
-					    <button type="button" onclick="openModalWarningDelObj(2);" class="btn btn-danger btn-sm btn-alr" id="btn-delete-item" title="Удалить"><i class="bi bi-trash"></i></button>
+					    <button type="button" onclick="openModalAlarmNameNew();" class="btn btn-primary btn-circle" id="btn-new-item" title="Добавить"><i class="bi bi-newspaper"></i></button>
+					    <button type="button" onclick="openModalNameAlarm();" class="btn btn-primary btn-circle" id="btn-edit-item" title="Редактировать"><i class="bi bi-pencil-square"></i></button>
+					    <button type="button" onclick="openModalWarningDelObj(2);" class="btn btn-danger btn-circle" id="btn-delete-item" title="Удалить"><i class="bi bi-trash"></i></button>
 					</div>
 				 </div>  
 				 <table class="table table-secondary table-condensed table-striped table-hover table-sm table-bordered 
@@ -360,6 +360,7 @@
        }
 	   $("#modalEditGroupName").modal('show');	 
 	   qToModalEditGroupAlarm();    
+	   setCursorModal("#modalEditGroupName", "#id_Group");
    }
 
    //** Отрытие модального окна для редактирования modaleditnamealarm/modalFormEditAlarmName
@@ -370,6 +371,7 @@
 	   }
        $("#modalEditNameAlarm").modal('show');   
        qToModalEditNameAlarm();  
+       setCursorModal("#modalEditNameAlarm", "#id_Alarm");
    }
    
    //** Открытие мод окна для добавления новой записи modaleditgroup/modalFormEditGroup
@@ -379,7 +381,18 @@
        	$('#modalEditGroupName #id_Alarm_Group').val(0);
     	$('#modalEditGroupName #id_Group').val(0);
     	$('#modalEditGroupName #name_Group').val(''); 
+
+    	setCursorModal("#modalEditGroupName", "#id_Group");
    }
+
+   function setCursorModal(idModal, fieldModal){
+
+	   $(idModal).on('shown.bs.modal', function() {
+		   $(fieldModal).focus();
+		   $(fieldModal).select();
+		 })
+
+	   }
 
 
  //** Открытие мод окна для добавления новой записи modaleditnamealarm/modalFormEditAlarmName
@@ -394,6 +407,8 @@
        $('#modalEditNameAlarm #id_Alarm').val(0);
        $('#modalEditNameAlarm #alarm_Name').val('');
        $('#modalEditNameAlarm #id_Alarm_Group').val(idGroup); 
+
+       setCursorModal("#modalEditNameAlarm", "#id_Alarm");
    }
 
    
