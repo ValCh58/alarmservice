@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Редактирование групп и аварий</title>
+<title>Редактор тревог</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -15,9 +15,9 @@
 </head>
 <body>
     
-    <!----------------------------------Модальное окно редактирования групп аварий---------------------------->
+    <!----------------------------------Модальное окно редактирования групп тревог---------------------------->
     <div th:insert="~{fragments/modaleditgroup :: modal_edit_group}"></div>
-    <!----------------------------------Модальное окно редактирования аварий---------------------------------->
+    <!----------------------------------Модальное окно редактирования тревог---------------------------------->
     <div th:insert="~{fragments/modaleditnamealarm :: modal_edit_name_alarm}"></div>
     <!------------------------------- Модальное окно для предупреждения об удалении -------------------------->
     <div th:insert="~{fragments/warningdelobj :: warning_del_obj}"></div>
@@ -28,7 +28,7 @@
 				<div class="form-row mt-2 ml-1 mr-1">
 					<div class="row">
 						<div class="col text-nowrap">
-							<h5 style="text-align: right;">Редактор аварий</h5>
+							<h5 style="text-align: right;">Редактор тревог</h5>
 						</div>
 						<div class="col">
 							<a th:href="@{/admin/home}" class="btn btn-primary btn-sm">Выход</a>
@@ -41,7 +41,7 @@
 				 
 				 <div class="row">
 					<div class="col text-nowrap">
-						<h6 style="text-align: right;font-size: 1.0rem;white-space: nowrap;">Таблица групп аварий</h6>
+						<h6 style="text-align: right;font-size: 1.0rem;white-space: nowrap;">Таблица групп тревог</h6>
 					</div>
 					<div class="col">
 					    <button type="button" onclick="openModalGroupAlarmNew();" class="btn btn-primary  btn-circle" id="btn-new" title="Добавить"><i class="bi bi-newspaper"></i></button>
@@ -57,7 +57,7 @@
 							   <th>№</th>
 							   <th style="display: none;">id_alarm_group</th>
 							   <th>Номер</th>
-							   <th>Имя группы аварий</th>
+							   <th>Имя группы</th>
 							   <th>Выбор</th>
 						   </tr>
 					   </thead>
@@ -75,7 +75,7 @@
 				<div class="col-auto">
 				  <div class="row">
 					<div class="col text-nowrap">
-						<h6 style="text-align: right;font-size: 1.0rem;white-space: nowrap;">Таблица аварий в группе</h6>
+						<h6 style="text-align: right;font-size: 1.0rem;white-space: nowrap;">Таблица тревог в группе</h6>
 					</div>
 					<div class="col">
 					    <button type="button" onclick="openModalAlarmNameNew();" class="btn btn-primary btn-circle" id="btn-new-item" title="Добавить"><i class="bi bi-newspaper"></i></button>
@@ -92,7 +92,7 @@
 				         <th>№</th>
 				         <th style="display: none;">id_alarm_name</th>
 				         <th>Номер</th>
-				         <th>Имя аварии</th>
+				         <th>Имя тревоги</th>
 				         <th style="display: none;">id_alarm_group</th>
 				         <th>Выбор</th>
 				       </tr>  

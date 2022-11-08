@@ -1,0 +1,15 @@
+[Unit]
+Description=webalarmservice Daemon
+After=network-online.target
+
+[Service]
+Type=forking
+WorkingDirectory=/home/test_ip_200
+ExecStart=/home/test_ip_200/webalarmservice.sh
+PIDFile=/tmp/web_alarm-pid
+SuccessExitStatus=143
+TimeoutStopSec=100
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target
