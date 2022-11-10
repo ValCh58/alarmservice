@@ -43,10 +43,11 @@ public class TblAlarm implements Serializable {
     public void setLockFlag(Integer aLockFlag) {
         lockFlag = aLockFlag;
     }
-
+//!!!!!!!!!!!!!!ID is Bad, It needs to be corrected!!!!!!!!!!!!!!!!!!!!!!
     @Id
     @Column(name="TSLast", unique=true, precision=2000000000, scale=10)
     private int tsLast;
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
     
     @Column(name="TSActive", precision=2000000000, scale=10)
     private int tsActive;
