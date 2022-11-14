@@ -17,8 +17,7 @@
 		<testcontainers.version>1.17.3</testcontainers.version>
 	</properties>
 	<dependencies>
-	
-	    
+    
 
 		<!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
 		<dependency>
