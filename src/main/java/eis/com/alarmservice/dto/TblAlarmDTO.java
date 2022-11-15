@@ -9,10 +9,8 @@ import lombok.Data;
 
 public class TblAlarmDTO {
 
-	public TblAlarmDTO() {}
-	
-	private LocalDateTime TSActive;
-	private LocalDateTime TSInactive;
+	private String TSActive;
+	private String TSInactive;
 	private String name_alarm;
 	private String name_group;
 	private Integer GroupId;
