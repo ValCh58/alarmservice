@@ -5,6 +5,13 @@ position: relative;
 height: 400px;
 overflow: auto;
 }
+
+.my-custom-scrollbar-alarm {
+position: relative;
+height: 520px;
+overflow: auto;
+}
+
 .table-wrapper-scroll-y {
 display: block;
 }

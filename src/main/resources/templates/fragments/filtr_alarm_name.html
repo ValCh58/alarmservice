@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>filtr_diagramm</title>
+</head>
+<body>
+<div th:fragment="filtr_alarmname">
+           <div class="form-row justify-content-center align-items-center" style="margin-top: 3px; margin-bottom: 2px; margin-left: 1px">
+			   <div class="row" style="margin-top: 1px; margin-bottom: 1px; margin-left: 1px">
+			   <div class="col" style="margin-top: 1px; margin-bottom: 1px">
+				   <input value="" type="text" class="form-control" id="finder" name="finder-items" placeholder="Поиск по таблице"/>
+			   </div>
+			   <div class="col" style="margin-top: 1px; margin-bottom: 1px">
+				   <input value="" type="date" class="form-control pull-right" id="datefrom" name="datebeg" placeholder="За период с"/>
+			   </div>
+			   <div class="col" style="margin-top: 1px; margin-bottom: 1px">
+				   <input value="" type="date" class="form-control pull-right" id="dateto" name="dateend" placeholder="по"/>
+		       </div>
+		       <div class="col">
+				   <button type="button" class="btn btn-secondary  btn-circle" id="btn-filter"
+				                                   style="margin-top: 4px;" title="Фильтр"><i class="bi bi-funnel"></i></button>
+	           </div>
+		       </div>	   
+		 </div>
+</div>
+</body>
+</html>
