@@ -1,7 +1,5 @@
 package eis.com.alarmservice.queres;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,23 +26,35 @@ public class QueryAlarmsAll {
     			+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, "
     			+ " GroupId, AlarmId " 
     			+ "	from TblAlarm ) as alarms " 
-    			+ " where alarms.TSActive between :dateStart and :dateEnd";
+    			+ " where alarms.TSActive between :dateSt and :dateEn";
 	
 	
-	public List<TblAlarmDTO> getTblAlarmDTO(){
+	public List<TblAlarmDTO> getTblAlarmDTO(String dateStart, String dateEnd){
 		listTblAlarmDTO.clear();
 		
-		String dateStart = "2022-07-05 00:00:00";
-		String dateEnd   = "2022-07-05 23:59:59";
+		StringBuilder dateSt = new StringBuilder(dateStart);
+		dateSt.append(" 00:00:00");
+		StringBuilder dateEn = new StringBuilder(dateEnd);
+		dateEn.append(" 23:59:59");
 		
 		@SuppressWarnings("unchecked")
 		List<Tuple> list = em.createNativeQuery(qeryString, Tuple.class)
-		                     .setParameter("dateStart", dateStart)
-		                     .setParameter("dateEnd", dateEnd)
+		                     .setParameter("dateSt", dateSt.toString())
+		                     .setParameter("dateEn", dateEn.toString())
 		                     .getResultList();
 		
 		
-		if(list.isEmpty()) {return null;}
+		if(list.isEmpty()) {
+			listTblAlarmDTO.add(
+				new TblAlarmDTO(dateSt.toString(),
+						        dateEn.toString(),
+					            "Нет данных",
+					            "Нет данных",
+					            0,
+					            0
+					           )	
+					);
+			return listTblAlarmDTO;}
 		
 		for (Tuple t : list) {
 			TblAlarmDTO ta = new TblAlarmDTO(

@@ -1,5 +1,7 @@
 package eis.com.alarmservice.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -19,10 +21,20 @@ public class CtrlMonitorAlarms {
 		this.srvMonitorAlarm = srvMonitorAlarm;
 	}
 
+	/**
+	 * Create table id="table-alarm-monitor"
+	 * @return ModelAndView
+	 */
 	@GetMapping(value="/user/view_alarms")
 	public ModelAndView getViewAlarms() {
+		//Current Dates by default////////////////////////////////////////////// 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+		LocalDate dateStartCurr = LocalDate.now();
+		LocalDate dateEndCurr = LocalDate.now();
+		
 		ModelAndView modelandview = new ModelAndView();
-		List<TblAlarmDTO> listTblAlarmDTO = srvMonitorAlarm.getQueryAlarmDto();
+		List<TblAlarmDTO> listTblAlarmDTO = srvMonitorAlarm.getQueryAlarmDto(dateStartCurr.format(formatter),
+				                                                               dateEndCurr.format(formatter));
 		modelandview.addObject("listTblAlarmDTO", listTblAlarmDTO);
 		modelandview.setViewName("/user/viewalarms");
 		return modelandview;

@@ -61,5 +61,93 @@
 	   </div>			 
 	</div>			 
    </div> 
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+		    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+		    crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+		    integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+		    crossorigin="anonymous"></script>
+    <!-- Для обеспечения работы $.ajax -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+   <script type="text/javascript">
+   
+   /**
+   * Запуск фильтра по датам
+   */
+   $('#btn-filter').on('click',function(){
+     //----------------------------------------------------------------------------------------  
+       const dateFrom = $('#datefrom').val();
+	   const dateTo   = $('#dateto').val();
+       
+       $.ajax({
+	        "type": "get",
+	        "url": '/user/AlarmName/dateFrom/'+dateFrom+'/dateTo/'+dateTo,
+	        "dataType": "json",
+	        "cache": "false",
+	        "data": "$(this).serialize()",
+	        success: function (data) {
+	        	//Удалим тело таблицы/////////////////
+	        	var tableBody = $("#table-alarm-monitor tbody");
+	        	tableBody.empty();
+	        	if(data.length == 0){
+	        		alert('Запрос вернул пустые данные.');
+                    return false;
+			    }
+	        	//Вставим новые записи////////////////
+	        	$.each(data, function (idx, obj){
+	        		$("#table-alarm-monitor tbody").append(
+	        		  '<tr>' + 
+	        		     '<td style="text-align: right;">'+(idx + 1)+'</td>' +
+				         '<td>'+obj.TSActive+'</td>' +
+				         '<td style="text-align: center;">'+obj.TSInactive+'</td>' +
+				         '<td style="text-align: center;">'+obj.AlarmId+'</td>' +
+				         '<td>'+obj.name_alarm+'</td>' +
+				         '<td style="text-align: center;">'+obj.GroupId+'</td>' +
+				         '<td>'+obj.name_group+'</td>' +
+	      			  '</tr>' 
+	        		);
+	        	});
+	        },
+	        error: function (x, e) {
+	        	var tableBody = $("#table-alarm-monitor tbody");
+	        	alert('Произошла ошибка при получении данных.');
+            }
+	    });
+     //----------------------------------------------------------------------------------------
+	   });
+   
+   /**
+   * Поиск по таблице
+   */
+   $(document).ready(function(){
+    $("#search").keyup(function(){
+    _this = this;
+       $.each($("#table-alarm-monitor tbody tr"), function() {
+           if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
+               $(this).hide();
+           } else {$(this).show(); }
+       });
+    });
+    $('#datefrom').val(myDateNow());
+	$('#dateto').val(myDateNow());
+  });  
+
+   /**
+    * Вывод текущего времени в формате YYYY-MM-DD 
+   */
+   function myDateNow(){
+ 	  var mlsk = Date.now();
+ 	  var nowDate = new Date(mlsk);
+ 	  var year = nowDate.getFullYear().toString();
+ 	  var month = (nowDate.getMonth() + 1).toString().length > 1 ? (nowDate.getMonth() + 1).toString() : '0'+(nowDate.getMonth() + 1).toString();
+ 	  var day = nowDate.getDate().toString().length > 1 ? nowDate.getDate().toString() : '0'+nowDate.getDate().toString();  
+ 	  var dat = year + '-' + month + '-' + day;
+ 	  return dat;
+   }
+   </script>
+   
+   
 </body>
 </html>

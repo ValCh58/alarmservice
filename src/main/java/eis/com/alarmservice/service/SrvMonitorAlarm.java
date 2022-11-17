@@ -20,9 +20,9 @@ public class SrvMonitorAlarm {
 	}
 
 	@Transactional(readOnly=true)
-	public List<TblAlarmDTO> getQueryAlarmDto(){
+	public List<TblAlarmDTO> getQueryAlarmDto(String dateStart, String dateEnd){
 		
-		List<TblAlarmDTO> list = Optional.ofNullable(queryAlarmAll.getTblAlarmDTO()).
+		List<TblAlarmDTO> list = Optional.ofNullable(queryAlarmAll.getTblAlarmDTO(dateStart, dateEnd)).
                 orElseThrow(()->new ResourceNotFoundException("Object list TblAlarmDTO Not found!"));
 		
 		return list;
