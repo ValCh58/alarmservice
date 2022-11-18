@@ -28,7 +28,7 @@ public class CtrlMonitorAlarms {
 	@GetMapping(value="/user/view_alarms")
 	public ModelAndView getViewAlarms() {
 		//Current Dates by default////////////////////////////////////////////// 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDate dateStartCurr = LocalDate.now();
 		LocalDate dateEndCurr = LocalDate.now();
 		

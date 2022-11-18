@@ -47,12 +47,12 @@
 				     <tbody class="table-group-divider">
 				       <tr th:each="list,cnt : *{listTblAlarmDTO}"> 
 				         <td th:text="${cnt.index + 1}" style="text-align: right;"></td>
-				         <td th:text="${list.TSActive}"></td>
-				         <td th:text="${list.TSInactive}" style="text-align: center;"></td>
-				         <td th:text="${list.AlarmId}" style="text-align: center;"></td>
-				         <td th:text="${list.name_alarm}"></td>
-				         <td th:text="${list.GroupId}" style="text-align: center;"></td>
-				         <td th:text="${list.name_group}"></td>
+				         <td th:text="${list.tsactive}"></td>
+				         <td th:text="${list.tsinactive}" style="text-align: center;"></td>
+				         <td th:text="${list.alarmId}" style="text-align: center;"></td>
+				         <td th:text="${list.nameAlarm}"></td>
+				         <td th:text="${list.groupId}" style="text-align: center;"></td>
+				         <td th:text="${list.nameGroup}"></td>
 				       </tr>
 				     </tbody>
 				 </table> 
@@ -78,8 +78,10 @@
    */
    $('#btn-filter').on('click',function(){
      //----------------------------------------------------------------------------------------  
-       const dateFrom = $('#datefrom').val();
-	   const dateTo   = $('#dateto').val();
+       var strDat1 = $('#datefrom').val();
+       const dateFrom = myFormatDate(strDat1);
+       var strDat2 = $('#dateto').val(); 
+	   const dateTo   = myFormatDate(strDat2);
        
        $.ajax({
 	        "type": "get",
@@ -100,12 +102,12 @@
 	        		$("#table-alarm-monitor tbody").append(
 	        		  '<tr>' + 
 	        		     '<td style="text-align: right;">'+(idx + 1)+'</td>' +
-				         '<td>'+obj.TSActive+'</td>' +
-				         '<td style="text-align: center;">'+obj.TSInactive+'</td>' +
-				         '<td style="text-align: center;">'+obj.AlarmId+'</td>' +
-				         '<td>'+obj.name_alarm+'</td>' +
-				         '<td style="text-align: center;">'+obj.GroupId+'</td>' +
-				         '<td>'+obj.name_group+'</td>' +
+				         '<td>'+obj.tsactive+'</td>' +
+				         '<td style="text-align: center;">'+obj.tsinactive+'</td>' +
+				         '<td style="text-align: center;">'+obj.alarmId+'</td>' +
+				         '<td>'+obj.nameAlarm+'</td>' +
+				         '<td style="text-align: center;">'+obj.groupId+'</td>' +
+				         '<td>'+obj.nameGroup+'</td>' +
 	      			  '</tr>' 
 	        		);
 	        	});
@@ -117,6 +119,11 @@
 	    });
      //----------------------------------------------------------------------------------------
 	   });
+
+   function myFormatDate(strDat){
+       var arr =  strDat.split('-');
+	   return arr[2]+'-'+arr[1]+'-'+arr[0];
+	   }
    
    /**
    * Поиск по таблице
@@ -130,22 +137,34 @@
            } else {$(this).show(); }
        });
     });
-    $('#datefrom').val(myDateNow());
-	$('#dateto').val(myDateNow());
+
+    setMyCurrDate();
+    
   });  
 
    /**
-    * Вывод текущего времени в формате YYYY-MM-DD 
+   * Установка текущей даты
+   */
+   function setMyCurrDate(){
+       const d2 = d1 = myDateNow();
+       	   
+	   $('#datefrom').val(d1);
+	   $('#dateto').val(d2);
+	 };
+
+   /**
+    * Вывод текущего времени в формате YYYY-MM-DD или DD-MM-YYYY
    */
    function myDateNow(){
- 	  var mlsk = Date.now();
+	  var mlsk = Date.now();
  	  var nowDate = new Date(mlsk);
  	  var year = nowDate.getFullYear().toString();
  	  var month = (nowDate.getMonth() + 1).toString().length > 1 ? (nowDate.getMonth() + 1).toString() : '0'+(nowDate.getMonth() + 1).toString();
  	  var day = nowDate.getDate().toString().length > 1 ? nowDate.getDate().toString() : '0'+nowDate.getDate().toString();  
- 	  var dat = year + '-' + month + '-' + day;
- 	  return dat;
+      return (year + '-' + month + '-' + day);
    }
+
+   
    </script>
    
    

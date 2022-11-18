@@ -19,9 +19,9 @@ public class QueryAlarmsAll {
 	private List<TblAlarmDTO> listTblAlarmDTO = new ArrayList<>();
 	
     private String qeryString = 
-    		"select alarms.TSActive, alarms.TSInactive, alarms.NameAlarm, alarms.NameGroup, alarms.GroupId, alarms.AlarmId from( "
-    			+ " select iFNULL(datetime(((TSActive/10000000) - 11644473600), 'unixepoch'), \"\") as TSActive, "
-    			+ " iFNULL(datetime(((TSInactive/10000000) - 11644473600), 'unixepoch'), \"\") as TSInactive, "
+    		"select alarms.tsactive, alarms.tsinactive, alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId from( "
+    			+ " select iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive, "
+    			+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch')), \"\") as TSInactive, "
     			+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm, "
     			+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, "
     			+ " GroupId, AlarmId " 
@@ -58,12 +58,12 @@ public class QueryAlarmsAll {
 		
 		for (Tuple t : list) {
 			TblAlarmDTO ta = new TblAlarmDTO(
-					         (String)t.get("TSActive"),
-					         (String)t.get("TSInactive")==null?"":(String)t.get("TSInactive"),
-					         (String)t.get("NameAlarm"),
-					         (String)t.get("NameGroup"),
-					         (Integer)t.get("GroupId"),
-					         (Integer)t.get("AlarmId")
+					         (String)t.get("tsactive"),
+					         (String)t.get("tsinactive")==null?"":(String)t.get("tsinactive"),
+					         (String)t.get("nameAlarm"),
+					         (String)t.get("nameGroup"),
+					         (Integer)t.get("groupId"),
+					         (Integer)t.get("alarmId")
 					         );
 			listTblAlarmDTO.add(ta);
 		}

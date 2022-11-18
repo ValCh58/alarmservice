@@ -8,10 +8,10 @@ import lombok.Data;
 
 public class TblAlarmDTO {
 
-	private String TSActive;
-	private String TSInactive;
-	private String name_alarm;
-	private String name_group;
-	private Integer GroupId;
-	private Integer AlarmId;
+	private String tsactive;
+	private String tsinactive;
+	private String nameAlarm;
+	private String nameGroup;
+	private Integer groupId;
+	private Integer alarmId;
 }
