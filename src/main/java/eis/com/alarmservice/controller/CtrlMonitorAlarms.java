@@ -36,7 +36,18 @@ public class CtrlMonitorAlarms {
 		List<TblAlarmDTO> listTblAlarmDTO = srvMonitorAlarm.getQueryAlarmDto(dateStartCurr.format(formatter),
 				                                                               dateEndCurr.format(formatter));
 		modelandview.addObject("listTblAlarmDTO", listTblAlarmDTO);
-		modelandview.setViewName("/user/viewalarms");
+		modelandview.setViewName("user/viewalarms");
 		return modelandview;
+	}
+	
+	/**
+	 * Modal window for upload of data file
+	 * 
+	 */
+	@GetMapping(value="/user/modalUpload")
+	public ModelAndView uploadDataFromFile() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("user/upload_data");
+		return modelAndView;
 	}
 }

@@ -1,6 +1,6 @@
 #!/bin/sh
 SERVICE_NAME=webalarmservice
-PATH_TO_JAR=alarmservice.jar 
+PATH_TO_JAR=alarmservice-1.0.jar 
 PID_PATH_NAME=/tmp/web_alarm-pid
 echo “Starting $SERVICE_NAME ..”
 
