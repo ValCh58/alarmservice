@@ -50,4 +50,5 @@ public class CtrlMonitorAlarms {
 		modelAndView.setViewName("user/upload_data");
 		return modelAndView;
 	}
+	
 }
