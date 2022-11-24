@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Загрузка файла</title>
@@ -14,6 +14,7 @@
 		<div class="modal fade" id="modalUploadFile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
 		                                                               aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog">
+			  <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Обновление данных</h5>
@@ -21,22 +22,24 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-
 					<div class="modal-body">
-						<div class="mb-3">
+                      	<div class="mb-3">
                           <label for="formFile" class="form-label">Выбор файла для загрузки:</label>
-                          <input class="form-control" type="file" id="formFile">
+                          <input class="form-control" type="file" id="uploadFile" name="file">
                         </div>
+                     
 						<div class="modal-footer">
 							<button type="button"  id="btnCloseWindow" class="btn btn-secondary">Отменить</button>
-							<input type="button"   class="btn btn-primary" value="Загрузить"/>
+							<input type="submit"  id="uploadEvent" class="btn btn-primary" value="Загрузить"/>
 						</div>
 					</div>
                  </div>
+               </form>
 			</div>
 		</div>
     
      		
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
 		    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
 		    crossorigin="anonymous"></script>
@@ -44,17 +47,47 @@
 		    integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
 		    crossorigin="anonymous"></script>
     <!-- Для обеспечения работы $.ajax -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    
+        
     <script>
 		   $('document').ready(function(){
 		      $("#modalUploadFile").modal('show');  
+		      
+		      $('#btnCloseWindow').on('click', function(){
+				   $("#modalUploadFile").modal('hide');
+				   window.location.href = '/user/home_user';
+			   });
+
+		      $("#uploadEvent").on('click', function(event){
+		    	  event.preventDefault();
+				  uploadFile();
+	            });
+		      
 		   });
+
+		   function uploadFile(){
+			   var form = $('#fileUploadForm')[0];
+			   var data = new FormData(form);
+			   $.ajax({
+			        type: "POST",
+			        enctype: 'multipart/form-data',
+			        url: "/user/upload_data",
+			        data: data,
+			        processData: false,
+			        contentType: false,
+			        cache: false,
+			        timeout: 1000000,
+			        success: function(data, textStatus, jqXHR) {
+           
+			        },
+			        error: function(jqXHR, textStatus, errorThrown) {  
+			        	$("#result").html(jqXHR.responseText);
+			            console.log("ERROR : ", jqXHR.responseText);
+			        }
+			    });
+			}
 		   
-		   $('#btnCloseWindow').on('click', function(){
-			   $("#modalUploadFile").modal('hide');
-			   window.location.href = '/user/home_user';
-		   });
+		   
+            
 			
 	</script>		
 

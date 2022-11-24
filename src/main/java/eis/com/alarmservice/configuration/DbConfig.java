@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -12,17 +13,18 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 @Configuration
+@PropertySource({ "classpath:application.properties" })
 @EnableJpaRepositories(basePackages = "eis.com.alarmservice.repository")
-// @PropertySource("persistence-h2.properties")
-// @PropertySource("persistence-hsqldb.properties")
-// @PropertySource("persistence-derby.properties")
-// @PropertySource("persistence-sqlite.properties")
 public class DbConfig {
-
-    @Autowired
     private Environment env;
+     
+    @Autowired
+    public DbConfig(Environment env) {
+		super();
+		this.env = env;
+	}
 
-    @Bean
+	@Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
