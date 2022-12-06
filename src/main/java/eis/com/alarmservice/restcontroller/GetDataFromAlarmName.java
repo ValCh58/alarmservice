@@ -17,20 +17,31 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import eis.com.alarmservice.dto.TblAlarmDTO;
+import eis.com.alarmservice.repository.UploadAndInsertAlarmName;
 import eis.com.alarmservice.service.SrvMonitorAlarm;
 
 @RestController
 public class GetDataFromAlarmName {
 	private Environment env;
 	private SrvMonitorAlarm srvMonitorAlarm;
+	private UploadAndInsertAlarmName uploadAndInsertAlarmName;
 	
     @Autowired
-	public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, Environment env) {
+	public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, 
+			                    Environment env, 
+			                    UploadAndInsertAlarmName uploadAndInsertAlarmName) {
 		super();
 		this.srvMonitorAlarm = srvMonitorAlarm;
 		this.env = env;
+		this.uploadAndInsertAlarmName = uploadAndInsertAlarmName;
 	}
 
+    /**
+     * result off query by dateFrom and dateTo
+     * @param dateFrom
+     * @param dateTo
+     * @return query results
+     */
 	@GetMapping(value="/user/AlarmName/dateFrom/{dateFrom}/dateTo/{dateTo}")
 	public ResponseEntity <List<TblAlarmDTO>> recordsFromAlarmName(@PathVariable("dateFrom") String dateFrom, 
 			                                                       @PathVariable("dateTo")   String dateTo){
@@ -38,15 +49,22 @@ public class GetDataFromAlarmName {
 		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryAlarmDto(dateFrom, dateTo));
 	}
 	
+	/**
+	 * To upload file from clients
+	 * 
+	 * @param file
+	 * @return file upload results
+	 */
 	@PostMapping("/user/upload_data") 
 	  public ResponseEntity<?> handleFileUpload( @RequestParam("file") MultipartFile file) {
 		  String fileName = file.getOriginalFilename();
 		  String envDir = env.getProperty("path.upload.files");
-		  File uploadDir = new File(envDir);
-		  
+		 		  
 		  try {
+			File uploadDir = new File(envDir);  
 			if(!uploadDir.exists()) {uploadDir.mkdir();}  
 			file.transferTo( new File(envDir+fileName));
+			uploadAndInsertAlarmName.exportTblAlarmToCsv();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		} 
