@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -21,12 +22,24 @@ public class JdbcConfig {
 		super();
 		this.env = env;
 	}
+	
+	@Primary
+	@Bean(name = "myJdbcConnectPrimary")
+	public DataSource dataJdbcSourcePrimary() {
+        final DriverManagerDataSource dataSourcePrimary = new DriverManagerDataSource();
+        dataSourcePrimary.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        dataSourcePrimary.setUrl(env.getProperty("spring.datasource.url"));//jdbc:sqlite:alarmstorage0.sqlite
+        dataSourcePrimary.setUsername(env.getProperty("spring.jdbc-datasource.user"));
+        dataSourcePrimary.setPassword(env.getProperty("spring.jdbc-datasource.password"));
+        return dataSourcePrimary;
+    }
+	
 
 	@Bean(name = "myJdbcConnect")
 	public DataSource dataJdbcSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
-        dataSource.setUrl(env.getProperty("spring.jdbc-datasource.url"));
+        dataSource.setUrl(env.getProperty("spring.jdbc-datasource.url"));//jdbc:sqlite:c://alarmstorage/alarmstorage.sqlite
         dataSource.setUsername(env.getProperty("spring.jdbc-datasource.user"));
         dataSource.setPassword(env.getProperty("spring.jdbc-datasource.password"));
         return dataSource;

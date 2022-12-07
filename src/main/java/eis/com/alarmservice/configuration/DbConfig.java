@@ -27,7 +27,6 @@ public class DbConfig {
 	}
 
 	@Bean
-	@Primary
 	@ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -39,7 +38,6 @@ public class DbConfig {
     }
 
     @Bean
-    @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());

@@ -64,7 +64,7 @@ public class GetDataFromAlarmName {
 			File uploadDir = new File(envDir);  
 			if(!uploadDir.exists()) {uploadDir.mkdir();}  
 			file.transferTo( new File(envDir+fileName));
-			uploadAndInsertAlarmName.exportTblAlarmToCsv();
+			uploadAndInsertAlarmName.mergeTables();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		} 

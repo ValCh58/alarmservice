@@ -16,24 +16,21 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UploadAndInsertAlarmName {
-	@SuppressWarnings("unused")
 	private DataSource dataSource;
-	private JdbcTemplate jdbcTemplate;
+	private DataSource dataSourcePrimary;
+	private JdbcTemplate jdbcTemplate, jdbcTemlatePrimary;
 	@SuppressWarnings("unused")
 	private Environment env;
-	
-	private String envDir = null;
-	private File uploadDir = null;
-	
+	private File uploadDir;
+	private String envDir;
+		
 	final private String SQL_STR_IMPORT = "SELECT TSLast,"
 										+ " TSActive,"
 										+ " TSInactive,"
@@ -56,15 +53,24 @@ public class UploadAndInsertAlarmName {
 										+ " FROM TblAlarm";
 		
 	@Autowired
-	public UploadAndInsertAlarmName(@Qualifier("myJdbcConnect")DataSource dataSource, 
-			                                                   JdbcTemplate jdbcTemplate, Environment env) {
+	public UploadAndInsertAlarmName(@Qualifier("myJdbcConnectPrimary")DataSource dataSourcePrimary,
+			                                      @Qualifier("myJdbcConnect")DataSource dataSource, 
+			                                                             JdbcTemplate jdbcTemplate,
+			                                                       JdbcTemplate jdbcTemlatePrimary,
+			                                                                        Environment env) {
 		super();
+		this.dataSourcePrimary = dataSourcePrimary;
+		this.jdbcTemlatePrimary = jdbcTemlatePrimary; 
 		this.dataSource = dataSource;
 		this.jdbcTemplate = jdbcTemplate;
 		this.env = env;
-		envDir = env.getProperty("path.upload.files");
-		jdbcTemplate = new JdbcTemplate();		
-		jdbcTemplate.setDataSource(dataSource);
+		this.envDir = env.getProperty("path.upload.files");
+		this.uploadDir = new File(envDir + "importalarm.csv");
+	}
+	
+	public void mergeTables() {
+		exportTblAlarmToCsv();
+		importCsvToTblAlarmUpload();
 	}
  	
 	
@@ -77,7 +83,10 @@ public class UploadAndInsertAlarmName {
 		CSVPrinter csvPrinter = null;
 		
 		try 
-		{
+		{  //url=jdbc:sqlite:c://alarmstorage/alarmstorage.sqlite// 
+		   //@Qualifier("myJdbcConnect")DataSource//
+		   jdbcTemplate = new JdbcTemplate();		
+		   jdbcTemplate.setDataSource(dataSource);	
 		   uploadDir = new File(envDir + "importalarm.csv");	
 		   if(uploadDir.exists()) {uploadDir.delete();}
 		   uploadDir.createNewFile();
@@ -140,12 +149,13 @@ public class UploadAndInsertAlarmName {
 		return ret;
 	}
 	
-	/** Из БД alarmstorage0 !!!!!!!!!!!
-	 * Export into TblAlarmUpload table
+	/** 
+	 * Import into TblAlarmUpload table
 	 * @return Boolean
 	 */
-	private boolean ImportCsvToTblAlarmUpload() {
-		boolean ret;
+	
+	private boolean importCsvToTblAlarmUpload() {
+		boolean ret = false;
 		Reader reader;
 		
 		if(!uploadDir.exists()) {
@@ -153,9 +163,14 @@ public class UploadAndInsertAlarmName {
 		}
 		
 		try {
+			jdbcTemlatePrimary = new JdbcTemplate();		
+			jdbcTemlatePrimary.setDataSource(dataSourcePrimary);
 			reader = Files.newBufferedReader(Paths.get(uploadDir.getPath()));
 			@SuppressWarnings("deprecation")
 			Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(reader); //builder().setHeader().setSkipHeaderRecord(false);
+			for (CSVRecord record : records) {
+				 System.out.println(record.get(1)); 	
+			}
 		} catch (IOException e) {
 				e.printStackTrace();
 		}
@@ -163,7 +178,7 @@ public class UploadAndInsertAlarmName {
 
 		
 		
-		return false;
+		return ret;
 	}
 	
 	
