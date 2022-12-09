@@ -2,73 +2,101 @@
 
 package eis.com.alarmservice.modeladmin;
 
-import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table
-public class TblAlarmUpload implements Serializable {
+//@Entity
+//@Table
+public class TblAlarmUpload/* implements Serializable*/ {
 
     /**
 	 * Upload Table
 	 */
-	private static final long serialVersionUID = -2731322620118718184L;
+	//private static final long serialVersionUID = -2731322620118718184L;
 	
-    @Id
-    @Column(name="TSLast", precision=2000000000, scale=10)
-    private int tsLast;
-    @Column(name="TSActive", precision=2000000000, scale=10)
-    private int tsActive;
-    @Column(name="TSInactive", precision=2000000000, scale=10)
-    private int tsInactive;
-    @Column(name="TSAckn", precision=2000000000, scale=10)
-    private int tsAckn;
-    @Column(name="TValue", precision=2000000000, scale=10)
-    private double tValue;
-    @Column(name="TType", precision=2000000000, scale=10)
-    private int tType;
-    @Column(name="LValue1", precision=2000000000, scale=10)
-    private double lValue1;
-    @Column(name="LType1", precision=2000000000, scale=10)
-    private int lType1;
-    @Column(name="LValue2", precision=2000000000, scale=10)
-    private double lValue2;
-    @Column(name="LType2", precision=2000000000, scale=10)
-    private int lType2;
-    @Column(name="GroupId", precision=2000000000, scale=10)
-    private int groupId;
-    @Column(name="AlarmId", precision=2000000000, scale=10)
-    private int alarmId;
-    @Column(name="ClassId", precision=2000000000, scale=10)
-    private int classId;
-    @Column(name="Priority", precision=2000000000, scale=10)
-    private int priority;
-    @Column(name="State", precision=2000000000, scale=10)
-    private int state;
-    @Column(name="OffsetLast", precision=2000000000, scale=10)
-    private int offsetLast;
-    @Column(name="OffsetActive", precision=2000000000, scale=10)
-    private int offsetActive;
-    @Column(name="OffsetInactive", precision=2000000000, scale=10)
-    private int offsetInactive;
-    @Column(name="OffsetAckn", precision=2000000000, scale=10)
-    private int offsetAckn;
+    //@Id
+    //@Column(name="TSLast", precision=2000000000, scale=10)
+    private BigInteger tsLast;
+    //@Column(name="TSActive", precision=2000000000, scale=10)
+    private BigInteger tsActive;
+    //@Column(name="TSInactive", precision=2000000000, scale=10)
+    private BigInteger tsInactive;
+    //@Column(name="TSAckn", precision=2000000000, scale=10)
+    private BigInteger tsAckn;
+    //@Column(name="TValue", precision=2000000000, scale=10)
+    private Double tValue;
+    //@Column(name="TType", precision=2000000000, scale=10)
+    private BigInteger tType;
+    //@Column(name="LValue1", precision=2000000000, scale=10)
+    private Double lValue1;
+    //@Column(name="LType1", precision=2000000000, scale=10)
+    private BigInteger lType1;
+    //@Column(name="LValue2", precision=2000000000, scale=10)
+    private Double lValue2;
+    //@Column(name="LType2", precision=2000000000, scale=10)
+    private BigInteger lType2;
+    //@Column(name="GroupId", precision=2000000000, scale=10)
+    private BigInteger groupId;
+    //@Column(name="AlarmId", precision=2000000000, scale=10)
+    private BigInteger alarmId;
+    //@Column(name="ClassId", precision=2000000000, scale=10)
+    private BigInteger classId;
+    //@Column(name="Priority", precision=2000000000, scale=10)
+    private BigInteger priority;
+    //@Column(name="State", precision=2000000000, scale=10)
+    private BigInteger state;
+    //@Column(name="OffsetLast", precision=2000000000, scale=10)
+    private BigInteger offsetLast;
+    //@Column(name="OffsetActive", precision=2000000000, scale=10)
+    private BigInteger offsetActive;
+    //@Column(name="OffsetInactive", precision=2000000000, scale=10)
+    private BigInteger offsetInactive;
+    //@Column(name="OffsetAckn", precision=2000000000, scale=10)
+    private BigInteger offsetAckn;
 
-    /** Default constructor. */
-    public TblAlarmUpload() {
-        super();
-    }
+    
 
-    /**
+	public TblAlarmUpload(BigInteger tsLast, BigInteger tsActive, BigInteger tsInactive, BigInteger tsAckn,
+			Double tValue, BigInteger tType, Double lValue1, BigInteger lType1, Double lValue2, BigInteger lType2,
+			BigInteger groupId, BigInteger alarmId, BigInteger classId, BigInteger priority, BigInteger state,
+			BigInteger offsetLast, BigInteger offsetActive, BigInteger offsetInactive, BigInteger offsetAckn) {
+		super();
+		this.tsLast = tsLast;
+		this.tsActive = tsActive;
+		this.tsInactive = tsInactive;
+		this.tsAckn = tsAckn;
+		this.tValue = tValue;
+		this.tType = tType;
+		this.lValue1 = lValue1;
+		this.lType1 = lType1;
+		this.lValue2 = lValue2;
+		this.lType2 = lType2;
+		this.groupId = groupId;
+		this.alarmId = alarmId;
+		this.classId = classId;
+		this.priority = priority;
+		this.state = state;
+		this.offsetLast = offsetLast;
+		this.offsetActive = offsetActive;
+		this.offsetInactive = offsetInactive;
+		this.offsetAckn = offsetAckn;
+	}
+	
+	
+
+	public TblAlarmUpload() {
+		super();
+		
+	}
+
+
+
+	/**
      * Access method for tsLast.
      *
      * @return the current value of tsLast
      */
-    public int getTsLast() {
+    public BigInteger getTsLast() {
         return tsLast;
     }
 
@@ -77,7 +105,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aTsLast the new value for tsLast
      */
-    public void setTsLast(int aTsLast) {
+    public void setTsLast(BigInteger aTsLast) {
         tsLast = aTsLast;
     }
 
@@ -86,7 +114,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of tsActive
      */
-    public int getTsActive() {
+    public BigInteger getTsActive() {
         return tsActive;
     }
 
@@ -95,7 +123,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aTsActive the new value for tsActive
      */
-    public void setTsActive(int aTsActive) {
+    public void setTsActive(BigInteger aTsActive) {
         tsActive = aTsActive;
     }
 
@@ -104,7 +132,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of tsInactive
      */
-    public int getTsInactive() {
+    public BigInteger getTsInactive() {
         return tsInactive;
     }
 
@@ -113,7 +141,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aTsInactive the new value for tsInactive
      */
-    public void setTsInactive(int aTsInactive) {
+    public void setTsInactive(BigInteger aTsInactive) {
         tsInactive = aTsInactive;
     }
 
@@ -122,7 +150,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of tsAckn
      */
-    public int getTsAckn() {
+    public BigInteger getTsAckn() {
         return tsAckn;
     }
 
@@ -131,7 +159,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aTsAckn the new value for tsAckn
      */
-    public void setTsAckn(int aTsAckn) {
+    public void setTsAckn(BigInteger aTsAckn) {
         tsAckn = aTsAckn;
     }
 
@@ -140,7 +168,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of tValue
      */
-    public double getTValue() {
+    public Double getTValue() {
         return tValue;
     }
 
@@ -149,7 +177,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aTValue the new value for tValue
      */
-    public void setTValue(double aTValue) {
+    public void setTValue(Double aTValue) {
         tValue = aTValue;
     }
 
@@ -158,7 +186,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of tType
      */
-    public int getTType() {
+    public BigInteger getTType() {
         return tType;
     }
 
@@ -167,7 +195,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aTType the new value for tType
      */
-    public void setTType(int aTType) {
+    public void setTType(BigInteger aTType) {
         tType = aTType;
     }
 
@@ -176,7 +204,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of lValue1
      */
-    public double getLValue1() {
+    public Double getLValue1() {
         return lValue1;
     }
 
@@ -185,7 +213,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aLValue1 the new value for lValue1
      */
-    public void setLValue1(double aLValue1) {
+    public void setLValue1(Double aLValue1) {
         lValue1 = aLValue1;
     }
 
@@ -194,7 +222,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of lType1
      */
-    public int getLType1() {
+    public BigInteger getLType1() {
         return lType1;
     }
 
@@ -203,7 +231,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aLType1 the new value for lType1
      */
-    public void setLType1(int aLType1) {
+    public void setLType1(BigInteger aLType1) {
         lType1 = aLType1;
     }
 
@@ -212,7 +240,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of lValue2
      */
-    public double getLValue2() {
+    public Double getLValue2() {
         return lValue2;
     }
 
@@ -221,7 +249,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aLValue2 the new value for lValue2
      */
-    public void setLValue2(double aLValue2) {
+    public void setLValue2(Double aLValue2) {
         lValue2 = aLValue2;
     }
 
@@ -230,7 +258,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of lType2
      */
-    public int getLType2() {
+    public BigInteger getLType2() {
         return lType2;
     }
 
@@ -239,7 +267,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aLType2 the new value for lType2
      */
-    public void setLType2(int aLType2) {
+    public void setLType2(BigInteger aLType2) {
         lType2 = aLType2;
     }
 
@@ -248,7 +276,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of groupId
      */
-    public int getGroupId() {
+    public BigInteger getGroupId() {
         return groupId;
     }
 
@@ -257,7 +285,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aGroupId the new value for groupId
      */
-    public void setGroupId(int aGroupId) {
+    public void setGroupId(BigInteger aGroupId) {
         groupId = aGroupId;
     }
 
@@ -266,7 +294,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of alarmId
      */
-    public int getAlarmId() {
+    public BigInteger getAlarmId() {
         return alarmId;
     }
 
@@ -275,7 +303,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aAlarmId the new value for alarmId
      */
-    public void setAlarmId(int aAlarmId) {
+    public void setAlarmId(BigInteger aAlarmId) {
         alarmId = aAlarmId;
     }
 
@@ -284,7 +312,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of classId
      */
-    public int getClassId() {
+    public BigInteger getClassId() {
         return classId;
     }
 
@@ -293,7 +321,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aClassId the new value for classId
      */
-    public void setClassId(int aClassId) {
+    public void setClassId(BigInteger aClassId) {
         classId = aClassId;
     }
 
@@ -302,7 +330,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of priority
      */
-    public int getPriority() {
+    public BigInteger getPriority() {
         return priority;
     }
 
@@ -311,7 +339,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aPriority the new value for priority
      */
-    public void setPriority(int aPriority) {
+    public void setPriority(BigInteger aPriority) {
         priority = aPriority;
     }
 
@@ -320,7 +348,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of state
      */
-    public int getState() {
+    public BigInteger getState() {
         return state;
     }
 
@@ -329,7 +357,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aState the new value for state
      */
-    public void setState(int aState) {
+    public void setState(BigInteger aState) {
         state = aState;
     }
 
@@ -338,7 +366,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of offsetLast
      */
-    public int getOffsetLast() {
+    public BigInteger getOffsetLast() {
         return offsetLast;
     }
 
@@ -347,7 +375,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aOffsetLast the new value for offsetLast
      */
-    public void setOffsetLast(int aOffsetLast) {
+    public void setOffsetLast(BigInteger aOffsetLast) {
         offsetLast = aOffsetLast;
     }
 
@@ -356,7 +384,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of offsetActive
      */
-    public int getOffsetActive() {
+    public BigInteger getOffsetActive() {
         return offsetActive;
     }
 
@@ -365,7 +393,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aOffsetActive the new value for offsetActive
      */
-    public void setOffsetActive(int aOffsetActive) {
+    public void setOffsetActive(BigInteger aOffsetActive) {
         offsetActive = aOffsetActive;
     }
 
@@ -374,7 +402,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of offsetInactive
      */
-    public int getOffsetInactive() {
+    public BigInteger getOffsetInactive() {
         return offsetInactive;
     }
 
@@ -383,7 +411,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aOffsetInactive the new value for offsetInactive
      */
-    public void setOffsetInactive(int aOffsetInactive) {
+    public void setOffsetInactive(BigInteger aOffsetInactive) {
         offsetInactive = aOffsetInactive;
     }
 
@@ -392,7 +420,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @return the current value of offsetAckn
      */
-    public int getOffsetAckn() {
+    public BigInteger getOffsetAckn() {
         return offsetAckn;
     }
 
@@ -401,7 +429,7 @@ public class TblAlarmUpload implements Serializable {
      *
      * @param aOffsetAckn the new value for offsetAckn
      */
-    public void setOffsetAckn(int aOffsetAckn) {
+    public void setOffsetAckn(BigInteger aOffsetAckn) {
         offsetAckn = aOffsetAckn;
     }
 

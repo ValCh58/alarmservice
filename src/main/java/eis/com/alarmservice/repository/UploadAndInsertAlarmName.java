@@ -4,22 +4,33 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVFormat.Builder;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.InvalidResultSetAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
+
+import eis.com.alarmservice.modeladmin.TblAlarmUpload;
+
 
 @Service
 public class UploadAndInsertAlarmName {
@@ -30,6 +41,8 @@ public class UploadAndInsertAlarmName {
 	private Environment env;
 	private File uploadDir;
 	private String envDir;
+	
+	List<TblAlarmUpload> list = new ArrayList<>();
 		
 	final private String SQL_STR_IMPORT = "SELECT TSLast,"
 										+ " TSActive,"
@@ -51,6 +64,35 @@ public class UploadAndInsertAlarmName {
 										+ " OffsetInactive,"
 										+ " OffsetAckn"
 										+ " FROM TblAlarm";
+	
+	final private String SQL_STR_INS = "INSERT INTO TblAlarmUpload ("
+			                         + " TSLast,  TSActive, TSInactive, TSAckn, TValue, TType,"
+			                         + " LValue1, LType1, LValue2, LType2, GroupId, AlarmId,"
+			                         + " ClassId, Priority, State, OffsetLast, OffsetActive,"
+			                         + " OffsetInactive, OffsetAckn"
+			                         + " )"
+			                         + " VALUES ("
+			                         + " ?,"//'TSLast'
+		                        	 + " ?,"//'TSActive'
+			                         + " ?,"//'TSInactive'
+			                         + " ?,"//'TSAckn'
+			                         + " ?,"//'TValue'
+			                         + " ?,"//'TType'
+			                         + " ?,"//'LValue1',
+			                         + " ?,"//'LType1',
+			                         + " ?,"//'LValue2',
+			                         + " ?,"//'LType2',
+			                         + " ?,"//'GroupId',
+			                         + " ?,"//'AlarmId',
+			                         + " ?,"//'ClassId',
+			                         + " ?,"//'Priority',
+			                         + " ?,"//'State',
+			                         + " ?,"//'OffsetLast',
+			                         + " ?,"//'OffsetActive',
+			                         + " ?,"//'OffsetInactive',
+			                         + " ?"//'OffsetAckn'
+			                         + " );";
+			
 		
 	@Autowired
 	public UploadAndInsertAlarmName(@Qualifier("myJdbcConnectPrimary")DataSource dataSourcePrimary,
@@ -71,6 +113,13 @@ public class UploadAndInsertAlarmName {
 	public void mergeTables() {
 		exportTblAlarmToCsv();
 		importCsvToTblAlarmUpload();
+		int[] counts = null;
+		try {
+			counts = batchUpdateTblAlarmUpload(list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Arrays.toString(counts);
 	}
  	
 	
@@ -153,11 +202,11 @@ public class UploadAndInsertAlarmName {
 	 * Import into TblAlarmUpload table
 	 * @return Boolean
 	 */
-	
+	@SuppressWarnings("deprecation")
 	private boolean importCsvToTblAlarmUpload() {
 		boolean ret = false;
-		Reader reader;
-		
+		Reader reader = null;
+				
 		if(!uploadDir.exists()) {
 		    return (ret = false);	
 		}
@@ -166,21 +215,78 @@ public class UploadAndInsertAlarmName {
 			jdbcTemlatePrimary = new JdbcTemplate();		
 			jdbcTemlatePrimary.setDataSource(dataSourcePrimary);
 			reader = Files.newBufferedReader(Paths.get(uploadDir.getPath()));
-			@SuppressWarnings("deprecation")
-			Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(reader); //builder().setHeader().setSkipHeaderRecord(false);
-			for (CSVRecord record : records) {
-				 System.out.println(record.get(1)); 	
+			Iterable<CSVRecord> records = new CSVParser(reader, CSVFormat.RFC4180.withFirstRecordAsHeader());
+			for(CSVRecord record : records){
+				TblAlarmUpload tau = new TblAlarmUpload
+					   (
+						new BigInteger(record.get("TSLast").isEmpty()?"0":record.get("TSLast")),
+						new BigInteger(record.get("TSActive").isEmpty()?"0":record.get("TSActive")),
+						new BigInteger(record.get("TSInactive").isEmpty()?"0":record.get("TSInactive")),
+						new BigInteger(record.get("TSAckn").isEmpty()?"0":record.get("TSAckn")),
+						Double.valueOf(record.get("TValue").isEmpty()?"0":record.get("TValue")),
+						new BigInteger(record.get("TType").isEmpty()?"0":record.get("TType")),
+						Double.valueOf(record.get("LValue1").isEmpty()?"0":record.get("LValue1")),
+						new BigInteger(record.get("LType1").isEmpty()?"0":record.get("LType1")),
+						Double.valueOf(record.get("LValue2").isEmpty()?"0":record.get("LValue2")),
+						new BigInteger(record.get("LType2").isEmpty()?"0":record.get("LType2")),
+						new BigInteger(record.get("GroupId").isEmpty()?"0":record.get("GroupId")),
+						new BigInteger(record.get("AlarmId").isEmpty()?"0":record.get("AlarmId")),
+						new BigInteger(record.get("ClassId").isEmpty()?"0":record.get("ClassId")),
+						new BigInteger(record.get("Priority").isEmpty()?"0":record.get("Priority")),
+						new BigInteger(record.get("State").isEmpty()?"0":record.get("State")),
+						new BigInteger(record.get("OffsetLast").isEmpty()?"0":record.get("OffsetLast")),
+						new BigInteger(record.get("OffsetActive").isEmpty()?"0":record.get("OffsetActive")),
+						new BigInteger(record.get("OffsetInactive").isEmpty()?"0":record.get("OffsetInactive")),
+						new BigInteger(record.get("OffsetAckn").isEmpty()?"0":record.get("OffsetAckn"))
+					   );
+				 list.add(tau);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 				e.printStackTrace();
 		}
-        
-
-		
-		
-		return ret;
+		finally {
+			try {
+				if(reader != null)
+				   reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+   	    return ret;
 	}
 	
-	
+	private int[] batchUpdateTblAlarmUpload(final List<TblAlarmUpload> list) throws SQLException {
+		
+		return jdbcTemlatePrimary.batchUpdate(SQL_STR_INS,
+		        new BatchPreparedStatementSetter() {
+		            @Override
+		            public void setValues(PreparedStatement ps, int i) throws SQLException {
+		                ps.setObject(1, list.get(i).getTsLast());
+		                ps.setObject(2, list.get(i).getTsActive());
+		                ps.setObject(3, list.get(i).getTsInactive());
+		                ps.setObject(4, list.get(i).getTsAckn());
+		                ps.setObject(5, list.get(i).getTValue());
+		                ps.setObject(6, list.get(i).getTType());
+		                ps.setObject(7, list.get(i).getLValue1());
+		                ps.setObject(8, list.get(i).getLType1());
+		                ps.setObject(9, list.get(i).getLValue2());
+		                ps.setObject(10, list.get(i).getLType2());
+		                ps.setObject(11, list.get(i).getGroupId());
+		                ps.setObject(12, list.get(i).getAlarmId());
+		                ps.setObject(13, list.get(i).getClassId());
+		                ps.setObject(14, list.get(i).getPriority());
+		                ps.setObject(15, list.get(i).getState());
+		                ps.setObject(16, list.get(i).getOffsetLast());
+		                ps.setObject(17, list.get(i).getOffsetActive());
+		                ps.setObject(18, list.get(i).getOffsetInactive());
+		                ps.setObject(19, list.get(i).getOffsetAckn());
+		            }
+		            @Override
+		            public int getBatchSize() {
+		                return list.size();
+		            }
+		        });
+		
+	}
 
 }
