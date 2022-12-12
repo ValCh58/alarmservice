@@ -2,56 +2,32 @@
 
 package eis.com.alarmservice.modeladmin;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
-//@Entity
-//@Table
-public class TblAlarmUpload/* implements Serializable*/ {
+public class TblAlarmUpload {
 
     /**
 	 * Upload Table
 	 */
-	//private static final long serialVersionUID = -2731322620118718184L;
 	
-    //@Id
-    //@Column(name="TSLast", precision=2000000000, scale=10)
     private BigInteger tsLast;
-    //@Column(name="TSActive", precision=2000000000, scale=10)
     private BigInteger tsActive;
-    //@Column(name="TSInactive", precision=2000000000, scale=10)
     private BigInteger tsInactive;
-    //@Column(name="TSAckn", precision=2000000000, scale=10)
     private BigInteger tsAckn;
-    //@Column(name="TValue", precision=2000000000, scale=10)
     private Double tValue;
-    //@Column(name="TType", precision=2000000000, scale=10)
     private BigInteger tType;
-    //@Column(name="LValue1", precision=2000000000, scale=10)
     private Double lValue1;
-    //@Column(name="LType1", precision=2000000000, scale=10)
     private BigInteger lType1;
-    //@Column(name="LValue2", precision=2000000000, scale=10)
     private Double lValue2;
-    //@Column(name="LType2", precision=2000000000, scale=10)
     private BigInteger lType2;
-    //@Column(name="GroupId", precision=2000000000, scale=10)
     private BigInteger groupId;
-    //@Column(name="AlarmId", precision=2000000000, scale=10)
     private BigInteger alarmId;
-    //@Column(name="ClassId", precision=2000000000, scale=10)
     private BigInteger classId;
-    //@Column(name="Priority", precision=2000000000, scale=10)
     private BigInteger priority;
-    //@Column(name="State", precision=2000000000, scale=10)
     private BigInteger state;
-    //@Column(name="OffsetLast", precision=2000000000, scale=10)
     private BigInteger offsetLast;
-    //@Column(name="OffsetActive", precision=2000000000, scale=10)
     private BigInteger offsetActive;
-    //@Column(name="OffsetInactive", precision=2000000000, scale=10)
     private BigInteger offsetInactive;
-    //@Column(name="OffsetAckn", precision=2000000000, scale=10)
     private BigInteger offsetAckn;
 
     

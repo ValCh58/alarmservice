@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -28,6 +27,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import eis.com.alarmservice.modeladmin.TblAlarmUpload;
 
@@ -92,6 +92,8 @@ public class UploadAndInsertAlarmName {
 			                         + " ?,"//'OffsetInactive',
 			                         + " ?"//'OffsetAckn'
 			                         + " );";
+	
+	final private String SQL_STR_DELETE ="DELETE FROM TblAlarmUpload";
 			
 		
 	@Autowired
@@ -110,16 +112,13 @@ public class UploadAndInsertAlarmName {
 		this.uploadDir = new File(envDir + "importalarm.csv");
 	}
 	
-	public void mergeTables() {
+	public void mergeTables() throws Exception{
+		@SuppressWarnings("unused")
+		int[] counts = null;
+		
 		exportTblAlarmToCsv();
 		importCsvToTblAlarmUpload();
-		int[] counts = null;
-		try {
-			counts = batchUpdateTblAlarmUpload(list);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		Arrays.toString(counts);
+		counts = batchUpdateTblAlarmUpload(list);
 	}
  	
 	
@@ -127,7 +126,7 @@ public class UploadAndInsertAlarmName {
 	 * Import from TblAlarm table
 	 * @return Boolean
 	 */
-	public boolean exportTblAlarmToCsv(){
+	public boolean exportTblAlarmToCsv() throws Exception {
 		boolean ret = false;
 		CSVPrinter csvPrinter = null;
 		
@@ -171,30 +170,15 @@ public class UploadAndInsertAlarmName {
 			  );
 		  }
 		   ret = true; 
+		}finally {
+		 try {
+		    	csvPrinter.close();
+		     } catch (IOException e) {
+			    e.printStackTrace();
+			   return false;
+		     }
 		}
-		catch(InvalidResultSetAccessException  irsa) {
-			irsa.printStackTrace();
-		}
-		catch (IOException ioe) {
-		   ioe.printStackTrace();
-	    }
-		catch(Exception e) {
- 		   e.printStackTrace();
-		}
-		finally {
-		  try {
-			csvPrinter.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		  try {
-			csvPrinter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		}
+		
 		return ret;
 	}
 	
@@ -203,7 +187,7 @@ public class UploadAndInsertAlarmName {
 	 * @return Boolean
 	 */
 	@SuppressWarnings("deprecation")
-	private boolean importCsvToTblAlarmUpload() {
+	private boolean importCsvToTblAlarmUpload() throws Exception {
 		boolean ret = false;
 		Reader reader = null;
 				
@@ -241,8 +225,6 @@ public class UploadAndInsertAlarmName {
 					   );
 				 list.add(tau);
 			}
-		} catch (Exception e) {
-				e.printStackTrace();
 		}
 		finally {
 			try {
@@ -255,10 +237,10 @@ public class UploadAndInsertAlarmName {
    	    return ret;
 	}
 	
-	private int[] batchUpdateTblAlarmUpload(final List<TblAlarmUpload> list) throws SQLException {
-		
-		return jdbcTemlatePrimary.batchUpdate(SQL_STR_INS,
-		        new BatchPreparedStatementSetter() {
+	@Transactional 
+	private int[] batchUpdateTblAlarmUpload(final List<TblAlarmUpload> list) throws Exception {
+		jdbcTemlatePrimary.execute(SQL_STR_DELETE);//Clear table 'TblAlarmUpload'
+		return jdbcTemlatePrimary.batchUpdate(SQL_STR_INS, new BatchPreparedStatementSetter() {
 		            @Override
 		            public void setValues(PreparedStatement ps, int i) throws SQLException {
 		                ps.setObject(1, list.get(i).getTsLast());

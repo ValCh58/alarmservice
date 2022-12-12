@@ -51,7 +51,6 @@ public class GetDataFromAlarmName {
 	
 	/**
 	 * To upload file from clients
-	 * 
 	 * @param file
 	 * @return file upload results
 	 */

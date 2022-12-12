@@ -77,7 +77,7 @@
 			        cache: false,
 			        timeout: 1000000,
 			        success: function(data, textStatus, jqXHR) {
-           
+                        alert("Загрузка данных - закончена.");
 			        },
 			        error: function(jqXHR, textStatus, errorThrown) {  
 			        	$("#result").html(jqXHR.responseText);
