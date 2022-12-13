@@ -42,7 +42,7 @@ public class UploadAndInsertAlarmName {
 	private File uploadDir;
 	private String envDir;
 	
-	List<TblAlarmUpload> list = new ArrayList<>();
+	private List<TblAlarmUpload> list = new ArrayList<>();
 		
 	final private String SQL_STR_IMPORT = "SELECT TSLast,"
 										+ " TSActive,"
@@ -93,8 +93,12 @@ public class UploadAndInsertAlarmName {
 			                         + " ?"//'OffsetAckn'
 			                         + " );";
 	
-	final private String SQL_STR_DELETE ="DELETE FROM TblAlarmUpload";
-			
+	final private String SQL_STR_DELETE = "DELETE FROM TblAlarmUpload";
+	final private String SQL_STR_MERGE = "INSERT INTO TblAlarm "
+			                           + " select * from TblAlarmUpload b "
+			                           + " where not EXISTS(select a.TSLast from TblAlarm a where "
+			                           + " a.TSLast = b.TSLast and a.AlarmId = b.AlarmId and a.GroupId = b.GroupId)";
+   			
 		
 	@Autowired
 	public UploadAndInsertAlarmName(@Qualifier("myJdbcConnectPrimary")DataSource dataSourcePrimary,
@@ -112,13 +116,21 @@ public class UploadAndInsertAlarmName {
 		this.uploadDir = new File(envDir + "importalarm.csv");
 	}
 	
-	public void mergeTables() throws Exception{
-		@SuppressWarnings("unused")
-		int[] counts = null;
-		
-		exportTblAlarmToCsv();
-		importCsvToTblAlarmUpload();
-		counts = batchUpdateTblAlarmUpload(list);
+	/**
+	 * Wrapper for Merge data
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws InvalidResultSetAccessException
+	 */
+	public void mergeTables() throws IOException, 
+	                                 SQLException, 
+	                                 InvalidResultSetAccessException{
+		exportTblAlarmToCsv();//export to csv file//
+		importCsvToTblAlarmUpload();//export from csv file to table 'TblAlarmUpload'//
+		int[] cntRec = batchUpdateTblAlarmUpload(list);//Batch update table 'TblAlarmUpload'//
+		if(cntRec.length > 0) { 
+		   merge2Tables();	//Merge data tables 'TblAlarm' and 'TblAlarmUpload'//
+		}
 	}
  	
 	
@@ -126,7 +138,7 @@ public class UploadAndInsertAlarmName {
 	 * Import from TblAlarm table
 	 * @return Boolean
 	 */
-	public boolean exportTblAlarmToCsv() throws Exception {
+	public boolean exportTblAlarmToCsv() throws InvalidResultSetAccessException, IOException {
 		boolean ret = false;
 		CSVPrinter csvPrinter = null;
 		
@@ -172,14 +184,13 @@ public class UploadAndInsertAlarmName {
 		   ret = true; 
 		}finally {
 		 try {
-		    	csvPrinter.close();
+			    if(csvPrinter != null) {csvPrinter.close();}
 		     } catch (IOException e) {
-			    e.printStackTrace();
+			   e.printStackTrace();
 			   return false;
 		     }
 		}
-		
-		return ret;
+	    return ret;
 	}
 	
 	/** 
@@ -187,7 +198,7 @@ public class UploadAndInsertAlarmName {
 	 * @return Boolean
 	 */
 	@SuppressWarnings("deprecation")
-	private boolean importCsvToTblAlarmUpload() throws Exception {
+	private boolean importCsvToTblAlarmUpload() throws IOException {
 		boolean ret = false;
 		Reader reader = null;
 				
@@ -199,6 +210,7 @@ public class UploadAndInsertAlarmName {
 			jdbcTemlatePrimary = new JdbcTemplate();		
 			jdbcTemlatePrimary.setDataSource(dataSourcePrimary);
 			reader = Files.newBufferedReader(Paths.get(uploadDir.getPath()));
+			@SuppressWarnings("resource")
 			Iterable<CSVRecord> records = new CSVParser(reader, CSVFormat.RFC4180.withFirstRecordAsHeader());
 			for(CSVRecord record : records){
 				TblAlarmUpload tau = new TblAlarmUpload
@@ -228,17 +240,20 @@ public class UploadAndInsertAlarmName {
 		}
 		finally {
 			try {
-				if(reader != null)
-				   reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}	
+				if(reader != null) {reader.close();}
+			} catch (IOException e) {e.printStackTrace();}	
 		}
    	    return ret;
 	}
 	
+	/**
+	 * Batch Update 'TblAlarmUpload' 
+	 * @param list
+	 * @return int[]
+	 * @throws SQLException
+	 */
 	@Transactional 
-	private int[] batchUpdateTblAlarmUpload(final List<TblAlarmUpload> list) throws Exception {
+	private int[] batchUpdateTblAlarmUpload(final List<TblAlarmUpload> list) throws SQLException {
 		jdbcTemlatePrimary.execute(SQL_STR_DELETE);//Clear table 'TblAlarmUpload'
 		return jdbcTemlatePrimary.batchUpdate(SQL_STR_INS, new BatchPreparedStatementSetter() {
 		            @Override
@@ -270,5 +285,13 @@ public class UploadAndInsertAlarmName {
 		        });
 		
 	}
-
+	
+	/**
+	 * Request for merge data
+	 */
+	@Transactional
+	private void merge2Tables() {
+		
+		jdbcTemlatePrimary.execute(SQL_STR_MERGE);
+	}
 }

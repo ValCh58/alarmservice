@@ -3,12 +3,15 @@ package eis.com.alarmservice.restcontroller;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,11 +67,14 @@ public class GetDataFromAlarmName {
 			if(!uploadDir.exists()) {uploadDir.mkdir();}  
 			file.transferTo( new File(envDir+fileName));
 			uploadAndInsertAlarmName.mergeTables();
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when reading or writing a CSV file.");
+		} catch(SQLException | InvalidResultSetAccessException ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing a sql requests.");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		} 
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing.");
+		}
 		return ResponseEntity.ok("File uploaded successfully.");
-		  
-	  }
+	}
 
 }
