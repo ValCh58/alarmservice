@@ -1,4 +1,4 @@
-package eis.com.alarmservice.repository;
+package eis.com.alarmservice.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVFormat.Builder;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
@@ -93,11 +94,12 @@ public class UploadAndInsertAlarmName {
 			                         + " ?"//'OffsetAckn'
 			                         + " );";
 	
-	final private String SQL_STR_DELETE = "DELETE FROM TblAlarmUpload";
+	final private String SQL_STR_DELETE = "DELETE FROM TblAlarmUpload;";
+	final private String SQL_STR_VACUUM = "VACUUM";
 	final private String SQL_STR_MERGE = "INSERT INTO TblAlarm "
 			                           + " select * from TblAlarmUpload b "
 			                           + " where not EXISTS(select a.TSLast from TblAlarm a where "
-			                           + " a.TSLast = b.TSLast and a.AlarmId = b.AlarmId and a.GroupId = b.GroupId)";
+			                           + " a.TSLast = b.TSLast and a.AlarmId = b.AlarmId and a.GroupId = b.GroupId);";
    			
 		
 	@Autowired
@@ -112,7 +114,9 @@ public class UploadAndInsertAlarmName {
 		this.dataSource = dataSource;
 		this.jdbcTemplate = jdbcTemplate;
 		this.env = env;
-		this.envDir = env.getProperty("path.upload.files");
+		this.envDir = null;
+		if (SystemUtils.IS_OS_WINDOWS)    {envDir = env.getProperty("path.win.upload.files");}
+	    else if (SystemUtils.IS_OS_LINUX) {envDir = env.getProperty("path.linux.upload.files");}
 		this.uploadDir = new File(envDir + "importalarm.csv");
 	}
 	
@@ -125,6 +129,7 @@ public class UploadAndInsertAlarmName {
 	public void mergeTables() throws IOException, 
 	                                 SQLException, 
 	                                 InvalidResultSetAccessException{
+		
 		exportTblAlarmToCsv();//export to csv file//
 		importCsvToTblAlarmUpload();//export from csv file to table 'TblAlarmUpload'//
 		int[] cntRec = batchUpdateTblAlarmUpload(list);//Batch update table 'TblAlarmUpload'//
@@ -135,9 +140,10 @@ public class UploadAndInsertAlarmName {
  	
 	
 	/**
-	 * Import from TblAlarm table
+	 * Export from TblAlarm table
 	 * @return Boolean
 	 */
+	@Transactional(readOnly = true)
 	public boolean exportTblAlarmToCsv() throws InvalidResultSetAccessException, IOException {
 		boolean ret = false;
 		CSVPrinter csvPrinter = null;
@@ -254,7 +260,8 @@ public class UploadAndInsertAlarmName {
 	 */
 	@Transactional 
 	private int[] batchUpdateTblAlarmUpload(final List<TblAlarmUpload> list) throws SQLException {
-		jdbcTemlatePrimary.execute(SQL_STR_DELETE);//Clear table 'TblAlarmUpload'
+		jdbcTemlatePrimary.execute(SQL_STR_DELETE);//Delete all records from table 'TblAlarmUpload'
+		jdbcTemlatePrimary.execute(SQL_STR_VACUUM);//Database cleanup
 		return jdbcTemlatePrimary.batchUpdate(SQL_STR_INS, new BatchPreparedStatementSetter() {
 		            @Override
 		            public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -282,8 +289,7 @@ public class UploadAndInsertAlarmName {
 		            public int getBatchSize() {
 		                return list.size();
 		            }
-		        });
-		
+		       });
 	}
 	
 	/**

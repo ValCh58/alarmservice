@@ -2,6 +2,7 @@ package eis.com.alarmservice.configuration;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,12 @@ public class JdbcConfig {
 	public DataSource dataJdbcSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
-        dataSource.setUrl(env.getProperty("spring.jdbc-datasource.url"));//jdbc:sqlite:c://alarmstorage/alarmstorage.sqlite
+        if (SystemUtils.IS_OS_WINDOWS) {
+        	dataSource.setUrl(env.getProperty("spring.jdbc-datasource.url"));//jdbc:sqlite:c://alarmstorage/alarmstorage.sqlite
+	    }
+	    else if (SystemUtils.IS_OS_LINUX) {
+	    	dataSource.setUrl(env.getProperty("spring.jdbc-linux-datasource.url"));//jdbc:sqlite:/home/alarmstorage/alarmstorage.sqlite  
+	    }
         dataSource.setUsername(env.getProperty("spring.jdbc-datasource.user"));
         dataSource.setPassword(env.getProperty("spring.jdbc-datasource.password"));
         return dataSource;
