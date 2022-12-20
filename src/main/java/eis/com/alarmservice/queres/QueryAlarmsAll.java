@@ -17,17 +17,13 @@ public class QueryAlarmsAll {
 	@PersistenceContext
 	private EntityManager em;
 	private List<TblAlarmDTO> listTblAlarmDTO = new ArrayList<>();
-	
     private String qeryString = 
-    		"select alarms.tsactive, alarms.tsinactive, alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId from( "
-    			+ " select iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive, "
-    			+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch')), \"\") as TSInactive, "
-    			+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm, "
-    			+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, "
-    			+ " GroupId, AlarmId " 
-    			+ "	from TblAlarm ) as alarms " 
-    			+ " where alarms.TSActive between :dateSt and :dateEn";
-	
+    		"select alarms.tsactive, iiF(alarms.tsinactive=0, \"\", alarms.tsinactive) as tsinactive , alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId\r\n"
+    		+ " from(select iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive,\r\n"
+    		+ " COALESCE(TSInactive, \"\", strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch'))) as TSInactive,\r\n"
+    		+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm,\r\n"
+    		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms  \r\n"
+    		+ " where alarms.TSActive between :dateSt and :dateEn"; 
 	
 	public List<TblAlarmDTO> getTblAlarmDTO(String dateStart, String dateEnd){
 		listTblAlarmDTO.clear();
@@ -43,18 +39,10 @@ public class QueryAlarmsAll {
 		                     .setParameter("dateEn", dateEn.toString())
 		                     .getResultList();
 		
-		
 		if(list.isEmpty()) {
-			listTblAlarmDTO.add(
-				new TblAlarmDTO(dateSt.toString(),
-						        dateEn.toString(),
-					            "Нет данных",
-					            "Нет данных",
-					            0,
-					            0
-					           )	
-					);
-			return listTblAlarmDTO;}
+			listTblAlarmDTO.add(new TblAlarmDTO(dateSt.toString(), dateEn.toString(), "Нет данных", "Нет данных", 0, 0));
+			return listTblAlarmDTO;
+		}
 		
 		for (Tuple t : list) {
 			TblAlarmDTO ta = new TblAlarmDTO(
@@ -67,9 +55,7 @@ public class QueryAlarmsAll {
 					         );
 			listTblAlarmDTO.add(ta);
 		}
-		
-		
-		
+			
 		return listTblAlarmDTO;
 	}
 

@@ -20,7 +20,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.InvalidResultSetAccessException;
@@ -98,11 +97,10 @@ public class UploadAndInsertAlarmName {
 	final private String SQL_STR_VACUUM = "VACUUM";
 	final private String SQL_STR_MERGE = "INSERT INTO TblAlarm "
 			                           + " select * from TblAlarmUpload b "
-			                           + " where not EXISTS(select a.TSLast from TblAlarm a where "
+			                           + " where NOT EXISTS(select a.TSLast from TblAlarm a where "
 			                           + " a.TSLast = b.TSLast and a.AlarmId = b.AlarmId and a.GroupId = b.GroupId);";
    			
 		
-	@Autowired
 	public UploadAndInsertAlarmName(@Qualifier("myJdbcConnectPrimary")DataSource dataSourcePrimary,
 			                                      @Qualifier("myJdbcConnect")DataSource dataSource, 
 			                                                             JdbcTemplate jdbcTemplate,

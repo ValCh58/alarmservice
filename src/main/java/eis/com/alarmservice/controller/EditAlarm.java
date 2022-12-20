@@ -2,7 +2,6 @@ package eis.com.alarmservice.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,7 +14,6 @@ public class EditAlarm {
 	
 	private SrvAlarmGroup srvAlarmGroup;
 		
-	@Autowired
 	public EditAlarm(SrvAlarmGroup srvAlarmGroup) {
 		super();
 		this.srvAlarmGroup = srvAlarmGroup;

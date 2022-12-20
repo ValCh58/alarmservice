@@ -4,11 +4,12 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,7 @@ public class GetDataFromAlarmName {
 	private SrvMonitorAlarm srvMonitorAlarm;
 	private UploadAndInsertAlarmName uploadAndInsertAlarmName;
 	
-    @Autowired
-	public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, 
+    public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, 
 			                    Environment env, 
 			                    UploadAndInsertAlarmName uploadAndInsertAlarmName) {
 		super();
@@ -62,13 +62,14 @@ public class GetDataFromAlarmName {
 	  public ResponseEntity<?> handleFileUpload( @RequestParam("file") MultipartFile file) {
 		  String fileName = file.getOriginalFilename();
 		  String envDir = null;
+		  String upfile = null;
 		  
 		  if (SystemUtils.IS_OS_WINDOWS) {envDir = env.getProperty("path.win.upload.files");}
 	      else if (SystemUtils.IS_OS_LINUX) {envDir = env.getProperty("path.linux.upload.files");}
 		  try {
 			File uploadDir = new File(envDir);  
 			if(!uploadDir.exists()) {uploadDir.mkdir();} 
-			String upfile = envDir+fileName;
+			   upfile = envDir+fileName;
 			file.transferTo( new File(upfile));
 			uploadAndInsertAlarmName.mergeTables();
 		} catch (IOException e) {
@@ -77,6 +78,12 @@ public class GetDataFromAlarmName {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing a sql requests.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing.");
+		}finally {
+			try {
+				Files.deleteIfExists(Paths.get(upfile));
+			} catch (IOException e) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при удалении файла CSV.");
+			}
 		}
 		return ResponseEntity.ok("Файл загружен успешно."); //("File uploaded successfully.");
 	}
