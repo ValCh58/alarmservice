@@ -51,6 +51,25 @@ public class CtrlMonitorAlarms {
 		return modelAndView;
 	}
 	
+	/**
+	 * Create table id="table-report-alarm"
+	 * @return ModelAndView
+	 */
+	@GetMapping(value="/user/reportalarms")
+	public ModelAndView getViewReportAlarms() {
+		//Current Dates by default////////////////////////////////////////////// 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate dateStartCurr = LocalDate.now();
+		LocalDate dateEndCurr = LocalDate.now();
+		
+		ModelAndView modelandview = new ModelAndView();
+		List<TblAlarmDTO> listTblAlarmDTO = srvMonitorAlarm.getQueryAlarmDto(dateStartCurr.format(formatter),
+				                                                               dateEndCurr.format(formatter));
+		modelandview.addObject("listTblAlarmDTO", listTblAlarmDTO);
+		modelandview.setViewName("user/reportalarms");
+		return modelandview;
+	}
+	
 	 
 	
 }

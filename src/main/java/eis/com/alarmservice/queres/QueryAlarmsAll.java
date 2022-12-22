@@ -25,6 +25,13 @@ public class QueryAlarmsAll {
     		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms  \r\n"
     		+ " where alarms.TSActive between :dateSt and :dateEn"; 
 	
+    
+    /**
+     * 
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
 	public List<TblAlarmDTO> getTblAlarmDTO(String dateStart, String dateEnd){
 		listTblAlarmDTO.clear();
 		
