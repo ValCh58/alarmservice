@@ -15,6 +15,7 @@ overflow: auto;
 .table-wrapper-scroll-y {
 display: block;
 }
+
 .table {
 	margin-top: 5px;
 }
