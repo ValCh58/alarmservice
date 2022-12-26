@@ -11,26 +11,24 @@
 </head>
 <body>
     <div class="container">
-       <div class="justify-content-center align-items-center" style="margin-top: 5px">
-          <div class="col-sm-12">
-            <div class="form-row mt-2 ml-1 mr-1">
-			   <div class="row">
-			      <div class="col text-nowrap">
+       
+			   <div class="row justify-content-center pt-2 pb-2">
+			      <div class="col-auto px-0 text-nowrap">
 				     <h5 style="text-align: right;">Отчет по мониторингу тревог</h5>
 			      </div>
-			      <div class="col">
+			      <div class="col-auto">
 			         <a th:href="@{/user/home_user}" class="btn btn-primary btn-sm">Выход</a>
 			      </div>
 			   </div>
-			</div>
-		  <div class="row justify-content-center" >
-		  <div class="col-auto">	
+
+		  	
 		  <!----------------------------------Фильтр тревог---------------------------->
-          <div th:insert="~{fragments/filtr_alarm_report :: filtr_alarm_report}"></div>   
-          <div class="col-sm-12 justify-content-center margin-top: 3px">   
+          <div th:insert="~{fragments/filtr_alarm_report :: filtr_alarm_report}"></div>  
+           
+          <div class="row justify-content-center">   
+            <div class="col-auto pt-1">
 	             <table class="table table-success table-condensed table-striped table-hover table-sm table-bordered 
-						      table-responsive-sm table-fixed table-wrapper-scroll-y"
-					      id="table-report-alarm">
+						       table-responsive-sm table-fixed table-wrapper-scroll-y" id="table-report-alarm">
 					      
 				     <thead style="text-align: center; position: sticky; top: 0">
 				       <tr>
@@ -55,11 +53,12 @@
 				       </tr>
 				     </tbody>
 			       </table>
-			</div>	  
-		  </div>		 
-	      </div>			 
-	   </div>			 
-	</div>			 
+			     </div>  
+			</div>
+				  
+		  			 
+
+				 
    </div> 
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"

@@ -16,9 +16,9 @@ overflow: auto;
 display: block;
 }
 
-.table {
-	margin-top: 5px;
-}
+/* .table { */
+/* 	margin-top: 5px; */
+/* } */
 
 .form-signin {
     max-width: 80%;
