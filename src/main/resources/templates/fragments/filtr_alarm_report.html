@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>filtr_diagramm</title>
+<title>filtr_alarm_report</title>
 </head>
 <body>
 	<div th:fragment="filtr_alarm_report">
-	    <div class="container">
-			<div class="row row-cols-auto justify-content-md-center" style="margin-top: 2px; margin-bottom: 2px;">
+
+			<div class="row row-cols-auto justify-content-md-center" style="margin-top: 2px;">
 			
 			    <!----------------------------- Даты и поиск по таблице ------------------------------------------------------------------------>
-				<div class="col-1 px-1" style="margin-top: 1px; margin-bottom: 1px">
+				<div class="col-auto px-1" style="margin-top: 1px; margin-bottom: 1px">
 					<input value="" type="text" class="form-control form-select-sm" id="search" name="finder-items" placeholder="Поиск" />
 				</div>
 				<div class="col  px-1" style="margin-top: 1px; margin-bottom: 1px">
@@ -22,14 +22,13 @@
 			
 			
 			    <!------------------------------------ Списки выбора параметров фильтрации -------------------------->
-			
-				<div class="col  px-1">
+				<div class="col-auto  px-1">
 				   <select class="form-select form-select-sm" aria-label=".form-select-sm">
 				      <option selected>Open this select 1</option>
                       <option value="1">One-1</option>
 				   </select>
 				</div>
-				<div class="col  px-1">
+				<div class="col-auto  px-1">
 				   <select class="form-select form-select-sm" aria-label=".form-select-sm">
 				      <option selected>Open this select 2</option>
                       <option value="1">One-2</option>
@@ -37,8 +36,7 @@
 				</div>
 				
 				<!----------------------------------------------------- Кнопки фильтров ------------------------------------------>
-			
-				<div class="col  px-0">
+			    <div class="col  px-0">
 					<button type="button" class="btn btn-secondary  btn-circle" id="btn-filter"  title="Фильтр">
 						<i class="bi bi-funnel"></i>
 					</button>
@@ -55,6 +53,5 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </body>
 </html>

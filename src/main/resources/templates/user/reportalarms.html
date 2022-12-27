@@ -12,7 +12,7 @@
 <body>
     <div class="container">
        
-			   <div class="row justify-content-center pt-2 pb-2">
+			   <div class="row pt-2 pb-2 justify-content-center">
 			      <div class="col-auto px-0 text-nowrap">
 				     <h5 style="text-align: right;">Отчет по мониторингу тревог</h5>
 			      </div>
@@ -26,8 +26,8 @@
           <div th:insert="~{fragments/filtr_alarm_report :: filtr_alarm_report}"></div>  
            
           <div class="row justify-content-center">   
-            <div class="col-auto pt-1">
-	             <table class="table table-success table-condensed table-striped table-hover table-sm table-bordered 
+            <div class="col-auto pt-1 justify-content-center">
+	             <table class="table table-success table-striped table-hover table-sm table-bordered 
 						       table-responsive-sm table-fixed table-wrapper-scroll-y" id="table-report-alarm">
 					      
 				     <thead style="text-align: center; position: sticky; top: 0">
@@ -90,7 +90,7 @@
 	        "data": "$(this).serialize()",
 	        success: function (data) {
 	        	//Удалим тело таблицы/////////////////
-	        	var tableBody = $("#table-alarm-monitor tbody");
+	        	var tableBody = $("#table-report-alarm tbody");
 	        	tableBody.empty();
 	        	if(data.length == 0){
 	        		alert('Запрос вернул пустые данные.');
@@ -98,7 +98,7 @@
 			    }
 	        	//Вставим новые записи////////////////
 	        	$.each(data, function (idx, obj){
-	        		$("#table-alarm-monitor tbody").append(
+	        		$("#table-report-alarm tbody").append(
 	        		  '<tr>' + 
 	        		     '<td style="text-align: right;">'+(idx + 1)+'</td>' +
 				         '<td>'+obj.tsactive+'</td>' +
@@ -112,7 +112,7 @@
 	        	});
 	        },
 	        error: function (x, e) {
-	        	var tableBody = $("#table-alarm-monitor tbody");
+	        	var tableBody = $("#table-report-alarm tbody");
 	        	alert('Произошла ошибка при получении данных.');
             }
 	    });
@@ -130,7 +130,7 @@
    $(document).ready(function(){
     $("#search").keyup(function(){
     _this = this;
-       $.each($("#table-alarm-monitor tbody tr"), function() {
+       $.each($("#table-report-alarm tbody tr"), function() {
            if($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
                $(this).hide();
            } else {$(this).show(); }
