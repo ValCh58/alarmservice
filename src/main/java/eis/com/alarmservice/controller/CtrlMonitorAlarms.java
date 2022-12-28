@@ -8,17 +8,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import eis.com.alarmservice.dto.AlarmGroupDTO;
 import eis.com.alarmservice.dto.TblAlarmDTO;
+import eis.com.alarmservice.service.SrvAlarmGroup;
 import eis.com.alarmservice.service.SrvMonitorAlarm;
 
 @Controller
 public class CtrlMonitorAlarms {
 
 	private SrvMonitorAlarm srvMonitorAlarm;
-
-	public CtrlMonitorAlarms(SrvMonitorAlarm srvMonitorAlarm) {
+    private SrvAlarmGroup srvAlarmGroup;
+	
+	public CtrlMonitorAlarms(SrvMonitorAlarm srvMonitorAlarm, SrvAlarmGroup srvAlarmGroup) {
 		super();
 		this.srvMonitorAlarm = srvMonitorAlarm;
+		this.srvAlarmGroup = srvAlarmGroup;
 	}
 
 	/**
@@ -63,9 +67,11 @@ public class CtrlMonitorAlarms {
 		LocalDate dateEndCurr = LocalDate.now();
 		
 		ModelAndView modelandview = new ModelAndView();
+		List<AlarmGroupDTO> listAlarmGroupDTO = srvAlarmGroup.getAlarmGroupDTO();
 		List<TblAlarmDTO> listTblAlarmDTO = srvMonitorAlarm.getQueryAlarmDto(dateStartCurr.format(formatter),
 				                                                               dateEndCurr.format(formatter));
 		modelandview.addObject("listTblAlarmDTO", listTblAlarmDTO);
+		modelandview.addObject("listAlarmGroupDTO", listAlarmGroupDTO);
 		modelandview.setViewName("user/reportalarms");
 		return modelandview;
 	}

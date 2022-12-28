@@ -2,11 +2,14 @@ package eis.com.alarmservice.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import eis.com.alarmservice.configuration.CnfModelMapper;
+import eis.com.alarmservice.dto.AlarmGroupDTO;
 import eis.com.alarmservice.exceptions.ResourceNotFoundException;
 import eis.com.alarmservice.modeladmin.AlarmGroup;
 import eis.com.alarmservice.modeladmin.AlarmName;
@@ -18,11 +21,13 @@ public class SrvAlarmGroup {
 	
 	private IAlarmGroup iAlarmGroup;
 	private IAlarmName iAlarmName;
+	private CnfModelMapper cnfModelMapper;
 		
-	public SrvAlarmGroup(IAlarmGroup iAlarmGroup, IAlarmName iAlarmName) {
+	public SrvAlarmGroup(IAlarmGroup iAlarmGroup, IAlarmName iAlarmName, CnfModelMapper cnfModelMapper) {
 		super();
 		this.iAlarmGroup = iAlarmGroup;
 		this.iAlarmName = iAlarmName;
+		this.cnfModelMapper = cnfModelMapper; 
 	}
     @Transactional(readOnly=true)
 	public  List<AlarmGroup> getResAlarmGroup(){
@@ -30,6 +35,18 @@ public class SrvAlarmGroup {
 				                orElseThrow(()->new ResourceNotFoundException("Object list AlarmGroup Not found!"));
 		return list;
 	}
+    
+    public List<AlarmGroupDTO> getAlarmGroupDTO(){
+    	
+    	List<AlarmGroup> list = getResAlarmGroup();
+       	return list.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+    
+    private AlarmGroupDTO convertToDto(AlarmGroup alarmGroup) {
+    	
+    	AlarmGroupDTO alarmGroupDTO = cnfModelMapper.modelMapper().map(alarmGroup, AlarmGroupDTO.class);
+    	return alarmGroupDTO;
+    }
     
     @Transactional(readOnly=true)
     public List<AlarmName> getResAlarmName(Integer idGroupName){
