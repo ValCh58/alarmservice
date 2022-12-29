@@ -70,6 +70,7 @@ public class CtrlMonitorAlarms {
 		List<AlarmGroupDTO> listAlarmGroupDTO = srvAlarmGroup.getAlarmGroupDTO();
 		List<TblAlarmDTO> listTblAlarmDTO = srvMonitorAlarm.getQueryAlarmDto(dateStartCurr.format(formatter),
 				                                                               dateEndCurr.format(formatter));
+		//Filling out the list of groupNames. id="list-group-name"//
 		modelandview.addObject("listTblAlarmDTO", listTblAlarmDTO);
 		modelandview.addObject("listAlarmGroupDTO", listAlarmGroupDTO);
 		modelandview.setViewName("user/reportalarms");
