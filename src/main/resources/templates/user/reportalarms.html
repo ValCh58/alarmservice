@@ -66,20 +66,26 @@
     <!-- Для обеспечения работы $.ajax -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
-   <script type="text/javascript">
+   <script th:inline="javascript">
    
+       
    /**
    * Onload doc
    */
    $('document').ready(function(){
-	   
-	   
+	   loadList();
    });
    
    function loadList(){
+	   var listFlow = [[${listAlarmGroupDTO}]];//Fucking editor!!! 
 	   
+	 //Заполняем список Тип УСПД//        	
+   	 $('#list-group-name option').remove();
+   	 $.each($(listFlow), function(idx, obj) {
+   		$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#list-group-name option');
+   	 });
 	   
-   }
+   };
    
    /**
    * Запуск фильтра по датам
