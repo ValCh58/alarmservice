@@ -76,14 +76,20 @@
 	   loadList();
    });
    
+   
+   
    function loadList(){
-	   var listFlow = [[${listAlarmGroupDTO}]];//Fucking editor!!! 
+	  const listFlow = [[${listAlarmGroupDTO}]];//Fucking editor!!!  
 	   
-	 //Заполняем список Тип УСПД//        	
-   	 $('#list-group-name option').remove();
-   	 $.each($(listFlow), function(idx, obj) {
-   		$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#list-group-name option');
-   	 });
+	 //Заполняем список групп аварий//        	
+   	 $('#listGroupName option').remove();
+	   
+    	 $('<option/>', {value: '-1', html: 'Все группы', selected: true}).appendTo('#listGroupName');  
+    	 $.each($(listFlow), function(idx, obj) {
+    		$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#listGroupName');
+    		//$('#listGroupName').append('<option value="' + obj.idGroup + '">' + obj.nameGroup + '</option>');   	 
+   	 }
+    	 );
 	   
    };
    
@@ -125,7 +131,9 @@
 	      			  '</tr>' 
 	        		);
 	        	});
-	        },
+	        	
+	        }
+            ,
 	        error: function (x, e) {
 	        	var tableBody = $("#table-report-alarm tbody");
 	        	alert('Произошла ошибка при получении данных.');
