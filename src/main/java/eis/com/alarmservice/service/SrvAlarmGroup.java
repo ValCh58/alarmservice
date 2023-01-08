@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import eis.com.alarmservice.configuration.CnfModelMapper;
 import eis.com.alarmservice.dto.AlarmGroupDTO;
+import eis.com.alarmservice.dto.AlarmNameDTO;
 import eis.com.alarmservice.exceptions.ResourceNotFoundException;
 import eis.com.alarmservice.modeladmin.AlarmGroup;
 import eis.com.alarmservice.modeladmin.AlarmName;
@@ -29,6 +30,11 @@ public class SrvAlarmGroup {
 		this.iAlarmName = iAlarmName;
 		this.cnfModelMapper = cnfModelMapper; 
 	}
+	
+	/**
+	 * Data from AlarmGroup table
+	 * @return List<AlarmGroup>
+	 */
     @Transactional(readOnly=true)
 	public  List<AlarmGroup> getResAlarmGroup(){
 		List<AlarmGroup> list = Optional.ofNullable(iAlarmGroup.findAll()).
@@ -36,18 +42,54 @@ public class SrvAlarmGroup {
 		return list;
 	}
     
+    /**
+     * Getting data from AlarmGroup table and converting it to DTO AlarmGroupDTO table
+     * @return List<AlarmGroupDTO>
+     */
     public List<AlarmGroupDTO> getAlarmGroupDTO(){
     	
     	List<AlarmGroup> list = getResAlarmGroup();
        	return list.stream().map(this::convertToDto).collect(Collectors.toList());
     }
     
+    /**
+     * converting it to DTO 
+     * @param alarmGroup
+     * @return AlarmGroupDTO
+     */
     private AlarmGroupDTO convertToDto(AlarmGroup alarmGroup) {
     	
     	AlarmGroupDTO alarmGroupDTO = cnfModelMapper.modelMapper().map(alarmGroup, AlarmGroupDTO.class);
     	return alarmGroupDTO;
     }
     
+    
+    public List<AlarmNameDTO> getAlarmName(Integer idGroup){
+    	
+    	List<AlarmName> list = getResAlarmName(idGroup);
+    	return list.stream().map(this::convertToAlarmNameDto).collect(Collectors.toList());
+    	
+    }
+    
+    
+    /**
+     * converting it to DTO 
+     * @param alarmName
+     * @return AlarmNameDTO
+     */
+    private AlarmNameDTO convertToAlarmNameDto(AlarmName alarmName) {
+    	
+    	AlarmNameDTO alarmNameDTO = cnfModelMapper.modelMapper().map(alarmName, AlarmNameDTO.class);
+    	return alarmNameDTO;
+    }
+    
+    
+    
+    /**
+     * Getting the alarm name from the alarm group
+     * @param idGroupName
+     * @return List<AlarmName>
+     */
     @Transactional(readOnly=true)
     public List<AlarmName> getResAlarmName(Integer idGroupName){
     	Sort sortIdNameAlarm = Sort.by("idAlarm").ascending();

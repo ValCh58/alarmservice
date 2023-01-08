@@ -67,37 +67,56 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
    <script th:inline="javascript">
-   
-       
+         
    /**
    * Onload doc
    */
    $('document').ready(function(){
-	   loadList();
+	   loadListAlarmGroup();
    });
    
-   
-   
-   function loadList(){
+   /**
+   * Заполняем список групп аварий
+   */
+   function loadListAlarmGroup(){
 	  const listFlow = [[${listAlarmGroupDTO}]];//Fucking editor!!!  
-	   
-	 //Заполняем список групп аварий//        	
+	 	         	
    	 $('#listGroupName option').remove();
-	   
-    	 $('<option/>', {value: '-1', html: 'Все группы', selected: true}).appendTo('#listGroupName');  
-    	 $.each($(listFlow), function(idx, obj) {
-    		$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#listGroupName');
-    		//$('#listGroupName').append('<option value="' + obj.idGroup + '">' + obj.nameGroup + '</option>');   	 
-   	 }
-    	 );
-	   
-   };
+	 $('<option/>', {value: '-1', html: 'Все группы', selected: true}).appendTo('#listGroupName');  
+     $.each($(listFlow), function(idx, obj) {
+    	$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#listGroupName');
+    	//$('#listGroupName').append('<option value="' + obj.idGroup + '">' + obj.nameGroup + '</option>');   	 
+   	 });
+	};
+	
+	/**
+	* Заполнение списка авариями в зависимости от групп аварий 'listGroupName'
+	*/
+	$('#listGroupName').on('change',  function(){
+		const idGroup = $('#listGroupName').val();
+		
+		$.ajax({
+			"type": "get",
+	        "url": '/user/GroupAlarmName/idGroup/' + idGroup,
+	        "dataType": "json",
+	        "cache": "true",
+	        "data": "$(this).serialize()",
+	        success: function(data){
+	        	alert('data: '+data);
+	        }
+			
+		});
+		
+		
+		
+	});
+	
    
    /**
    * Запуск фильтра по датам
    */
    $('#btn-filter').on('click',function(){
-     //----------------------------------------------------------------------------------------  
+       
        var strDat1 = $('#datefrom').val();
        const dateFrom = myFormatDate(strDat1);
        var strDat2 = $('#dateto').val(); 
@@ -107,7 +126,7 @@
 	        "type": "get",
 	        "url": '/user/AlarmName/dateFrom/'+dateFrom+'/dateTo/'+dateTo,
 	        "dataType": "json",
-	        "cache": "false",
+	        "cache": "true",
 	        "data": "$(this).serialize()",
 	        success: function (data) {
 	        	//Удалим тело таблицы/////////////////
@@ -139,9 +158,11 @@
 	        	alert('Произошла ошибка при получении данных.');
             }
 	    });
-     //----------------------------------------------------------------------------------------
-	   });
-
+     });
+   
+   /**
+   * Реверс даты
+   */
    function myFormatDate(strDat){
        var arr =  strDat.split('-');
 	   return arr[2]+'-'+arr[1]+'-'+arr[0];
@@ -159,9 +180,7 @@
            } else {$(this).show(); }
        });
     });
-
     setMyCurrDate();
-    
   });  
 
    /**
@@ -187,7 +206,6 @@
 
    
    </script>
-   
    
 </body>
 </html>

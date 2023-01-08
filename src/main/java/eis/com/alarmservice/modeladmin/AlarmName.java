@@ -18,10 +18,7 @@ import javax.persistence.Table;
 @Table(indexes={@Index(name="AlarmName_id_alarm_IX", columnList="id_alarm", unique=true)})
 public class AlarmName implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5916431316467025201L;
+    private static final long serialVersionUID = -5916431316467025201L;
 
 	/** Primary key. */
     protected static final String PK = "idAlarmName";

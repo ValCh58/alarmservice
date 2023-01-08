@@ -5,11 +5,12 @@ import lombok.AllArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class AlarmGroupDTO {
-	public AlarmGroupDTO() {
+public class AlarmNameDTO {
+
+	public AlarmNameDTO() {
 		super();
 	}
-	private int idAlarmGroup;
-	private int idGroup;
-	private String nameGroup;
+	 private int idAlarm;
+	 private String alName;
+
 }

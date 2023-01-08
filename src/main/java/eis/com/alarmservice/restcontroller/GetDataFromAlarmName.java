@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import eis.com.alarmservice.dto.AlarmNameDTO;
 import eis.com.alarmservice.dto.TblAlarmDTO;
+import eis.com.alarmservice.service.SrvAlarmGroup;
 import eis.com.alarmservice.service.SrvMonitorAlarm;
 import eis.com.alarmservice.service.UploadAndInsertAlarmName;
 
@@ -30,15 +32,27 @@ public class GetDataFromAlarmName {
 	private Environment env;
 	private SrvMonitorAlarm srvMonitorAlarm;
 	private UploadAndInsertAlarmName uploadAndInsertAlarmName;
+	private SrvAlarmGroup srvAlarmGroup;
 	
     public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, 
 			                    Environment env, 
-			                    UploadAndInsertAlarmName uploadAndInsertAlarmName) {
+			                    UploadAndInsertAlarmName uploadAndInsertAlarmName,
+			                    SrvAlarmGroup srvAlarmGroup) {
 		super();
 		this.srvMonitorAlarm = srvMonitorAlarm;
+		this.srvAlarmGroup = srvAlarmGroup;
 		this.env = env;
 		this.uploadAndInsertAlarmName = uploadAndInsertAlarmName;
 	}
+    
+    @GetMapping(value="/user/GroupAlarmName/idGroup/{idGroup}")
+    public ResponseEntity <List<AlarmNameDTO>> dataSelectForAlarmNameDropdown(
+    		                                                         @PathVariable("idGroup") Integer idGroup){
+    	List<AlarmNameDTO> list = srvAlarmGroup.getAlarmName(idGroup);
+    	
+		return ResponseEntity.status(OK).body(list);
+   }
+    
 
     /**
      * result off query by dateFrom and dateTo
@@ -58,7 +72,7 @@ public class GetDataFromAlarmName {
 	 * @param file
 	 * @return file upload results
 	 */
-	@PostMapping("/user/upload_data") 
+	@PostMapping(value="/user/upload_data") 
 	  public ResponseEntity<?> handleFileUpload( @RequestParam("file") MultipartFile file) {
 		  String fileName = file.getOriginalFilename();
 		  String envDir = null;
@@ -85,7 +99,7 @@ public class GetDataFromAlarmName {
 					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при удалении файла CSV.");
 			}
 		}
-		return ResponseEntity.ok("Файл загружен успешно."); //("File uploaded successfully.");
+		return ResponseEntity.ok("Файл загружен успешно."); 
 	}
 
 }
