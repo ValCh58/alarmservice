@@ -34,10 +34,8 @@ public class GetDataFromAlarmName {
 	private UploadAndInsertAlarmName uploadAndInsertAlarmName;
 	private SrvAlarmGroup srvAlarmGroup;
 	
-    public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, 
-			                    Environment env, 
-			                    UploadAndInsertAlarmName uploadAndInsertAlarmName,
-			                    SrvAlarmGroup srvAlarmGroup) {
+    public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, Environment env, 
+			                    UploadAndInsertAlarmName uploadAndInsertAlarmName, SrvAlarmGroup srvAlarmGroup) {
 		super();
 		this.srvMonitorAlarm = srvMonitorAlarm;
 		this.srvAlarmGroup = srvAlarmGroup;
@@ -45,12 +43,17 @@ public class GetDataFromAlarmName {
 		this.uploadAndInsertAlarmName = uploadAndInsertAlarmName;
 	}
     
+    /**
+     * Filling out the list of alarmNames. id="listAlarmName"
+     * @param idGroup
+     * @return List<AlarmNameDTO>
+     */
     @GetMapping(value="/user/GroupAlarmName/idGroup/{idGroup}")
     public ResponseEntity <List<AlarmNameDTO>> dataSelectForAlarmNameDropdown(
     		                                                         @PathVariable("idGroup") Integer idGroup){
-    	List<AlarmNameDTO> list = srvAlarmGroup.getAlarmName(idGroup);
     	
-		return ResponseEntity.status(OK).body(list);
+    	List<AlarmNameDTO> list = srvAlarmGroup.getAlarmName(idGroup);
+   		return ResponseEntity.status(OK).body(list);
    }
     
 
@@ -66,6 +69,23 @@ public class GetDataFromAlarmName {
 		
 		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryAlarmDto(dateFrom, dateTo));
 	}
+	
+	
+	/**
+     * result off query by dateFrom, dateTo, idGroup, idAlarm
+     * @param dateFrom
+     * @param dateTo
+     * @param idGroup
+     * @param idAlarm
+     * @return query results
+     */
+	@GetMapping(value="/user/AlarmName/dateFrom/{dateFrom}/dateTo/{dateTo}/idGroup/{idGroup}/idAlarm/{idAlarm}")
+	public ResponseEntity <List<TblAlarmDTO>> recordsFromAlarmNameRange(@PathVariable("dateFrom") String dateFrom, @PathVariable("dateTo")   String dateTo,
+			                                                             @PathVariable("idGroup") Integer idGroup, @PathVariable("idAlarm") Integer idAlarm){
+		
+		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryAlarmRangeDto(dateFrom, dateTo, idGroup, idAlarm));
+	}
+	
 	
 	/**
 	 * To upload file from clients

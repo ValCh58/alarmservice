@@ -82,7 +82,7 @@
 	  const listFlow = [[${listAlarmGroupDTO}]];//Fucking editor!!!  
 	 	         	
    	 $('#listGroupName option').remove();
-	 $('<option/>', {value: '-1', html: 'Все группы', selected: true}).appendTo('#listGroupName');  
+	 $('<option/>', {value: '-1', html: 'Выбрать группу', selected: true}).appendTo('#listGroupName');  
      $.each($(listFlow), function(idx, obj) {
     	$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#listGroupName');
     	//$('#listGroupName').append('<option value="' + obj.idGroup + '">' + obj.nameGroup + '</option>');   	 
@@ -90,7 +90,7 @@
 	};
 	
 	/**
-	* Заполнение списка авариями в зависимости от групп аварий 'listGroupName'
+	* Заполнение списка наименованиями аварий в зависимости от групп аварий 'listGroupName'
 	*/
 	$('#listGroupName').on('change',  function(){
 		const idGroup = $('#listGroupName').val();
@@ -102,13 +102,13 @@
 	        "cache": "true",
 	        "data": "$(this).serialize()",
 	        success: function(data){
-	        	alert('data: '+data);
+	        	$('#listAlarmName option').remove();
+	       	    $('<option/>', {value: '-2', html: 'Выбрать аварию', selected: true}).appendTo('#listAlarmName');  
+	            $.each($(data), function(idx, obj) {
+	           	$('<option/>', {value: obj.idAlarm, html: obj.alName, selected: false}).appendTo('#listAlarmName');
+	          });
 	        }
-			
 		});
-		
-		
-		
 	});
 	
    
@@ -121,10 +121,12 @@
        const dateFrom = myFormatDate(strDat1);
        var strDat2 = $('#dateto').val(); 
 	   const dateTo   = myFormatDate(strDat2);
+	   const idGroup = $('#listGroupName').val();
+	   const idAlarm = $('#listAlarmName').val();
        
        $.ajax({
 	        "type": "get",
-	        "url": '/user/AlarmName/dateFrom/'+dateFrom+'/dateTo/'+dateTo,
+	        "url": '/user/AlarmName/dateFrom/' + dateFrom + '/dateTo/' + dateTo + '/idGroup/' + idGroup + '/idAlarm/' + idAlarm,
 	        "dataType": "json",
 	        "cache": "true",
 	        "data": "$(this).serialize()",
@@ -204,8 +206,6 @@
       return (year + '-' + month + '-' + day);
    }
 
-   
    </script>
-   
 </body>
 </html>

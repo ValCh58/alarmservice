@@ -27,5 +27,17 @@ public class SrvMonitorAlarm {
 		
 		return list;
 	}
+	
+	
+	@Transactional(readOnly=true)
+	public List<TblAlarmDTO> getQueryAlarmRangeDto(String dateStart, String dateEnd, Integer idGroup,Integer iaAlarm){
+		
+		int y=0;
+		
+		List<TblAlarmDTO> list = Optional.ofNullable(queryAlarmAll.getTblAlarmDTO(dateStart, dateEnd)).
+                                          orElseThrow(()->new ResourceNotFoundException("Object list TblAlarmDTO Not found!"));
+		
+		return list;
+	}
 
 }

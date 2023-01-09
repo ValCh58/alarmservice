@@ -3,6 +3,7 @@
 package eis.com.alarmservice.modeladmin;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +16,7 @@ import javax.persistence.Version;
 @Table(indexes={@Index(name="TblAlarm_TSLast_IX", columnList="TSLast", unique=true), @Index(name="tblAlarmIdxClassLast", columnList="ClassId,TSLast", unique=true), @Index(name="tblAlarmIdxGroupLast", columnList="GroupId,TSLast", unique=true)})
 public class TblAlarm implements Serializable {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 5078631518620252693L;
+    private static final long serialVersionUID = 5078631518620252693L;
 	/**
      * The optimistic lock. Available via standard bean get/set operations.
      */
@@ -449,5 +447,24 @@ public class TblAlarm implements Serializable {
     public void setOffsetAckn(int aOffsetAckn) {
         offsetAckn = aOffsetAckn;
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(alarmId, groupId, tsActive);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TblAlarm)) {
+			return false;
+		}
+		TblAlarm other = (TblAlarm) obj;
+		return alarmId == other.alarmId && groupId == other.groupId && tsActive == other.tsActive;
+	}
+    
+    
 
 }

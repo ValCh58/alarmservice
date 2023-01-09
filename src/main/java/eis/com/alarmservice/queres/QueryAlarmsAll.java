@@ -17,14 +17,12 @@ public class QueryAlarmsAll {
 	@PersistenceContext
 	private EntityManager em;
 	private List<TblAlarmDTO> listTblAlarmDTO = new ArrayList<>();
-    private String qeryString = 
-    		"select alarms.tsactive, iiF(alarms.tsinactive=0, \"\", alarms.tsinactive) as tsinactive , alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId\r\n"
+    private String qeryString = "select alarms.tsactive, iiF(tsinactive=\"01-01-1601 00:00:00\", \"\", tsinactive) as tsinactive, alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId\r\n"
     		+ " from(select iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive,\r\n"
-    		+ " COALESCE(TSInactive, \"\", strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch'))) as TSInactive,\r\n"
+    		+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch')), \"\") as TSInactive,  \r\n"
     		+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm,\r\n"
-    		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms  \r\n"
-    		+ " where alarms.TSActive between :dateSt and :dateEn"; 
-	
+    		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms\r\n"
+    		+ " where alarms.TSActive between :dateSt and :dateEn";
     
     /**
      * 
