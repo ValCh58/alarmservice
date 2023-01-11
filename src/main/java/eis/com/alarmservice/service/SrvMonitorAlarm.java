@@ -9,13 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import eis.com.alarmservice.dto.TblAlarmDTO;
 import eis.com.alarmservice.exceptions.ResourceNotFoundException;
 import eis.com.alarmservice.queres.QueryAlarmsAll;
+import eis.com.alarmservice.queres.QueryAlarmsRange;
 
 @Service
 public class SrvMonitorAlarm {
 	private QueryAlarmsAll queryAlarmAll;
+	private QueryAlarmsRange queryAlarmsRange;
 
-	public SrvMonitorAlarm(QueryAlarmsAll queryAlarmAll) {
+	public SrvMonitorAlarm(QueryAlarmsAll queryAlarmAll, QueryAlarmsRange queryAlarmsRange) {
 		super();
+		this.queryAlarmsRange = queryAlarmsRange;
 		this.queryAlarmAll = queryAlarmAll;
 	}
 
@@ -30,11 +33,9 @@ public class SrvMonitorAlarm {
 	
 	
 	@Transactional(readOnly=true)
-	public List<TblAlarmDTO> getQueryAlarmRangeDto(String dateStart, String dateEnd, Integer idGroup,Integer iaAlarm){
+	public List<TblAlarmDTO> getQueryAlarmRangeDto(String dateStart, String dateEnd, Integer idGroup,Integer idAlarm){
 		
-		int y=0;
-		
-		List<TblAlarmDTO> list = Optional.ofNullable(queryAlarmAll.getTblAlarmDTO(dateStart, dateEnd)).
+		List<TblAlarmDTO> list = Optional.ofNullable(queryAlarmsRange.getTblAlarmDTO(dateStart, dateEnd, idGroup, idAlarm)).
                                           orElseThrow(()->new ResourceNotFoundException("Object list TblAlarmDTO Not found!"));
 		
 		return list;

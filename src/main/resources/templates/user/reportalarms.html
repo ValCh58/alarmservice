@@ -67,6 +67,16 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
    <script th:inline="javascript">
+   
+   
+   /**
+    * Reset page
+    */
+    $(function(){
+ 		  $('#btn-reset').click(function(){
+ 			  location.reload();
+ 		  })
+ 	});
          
    /**
    * Onload doc
@@ -82,7 +92,8 @@
 	  const listFlow = [[${listAlarmGroupDTO}]];//Fucking editor!!!  
 	 	         	
    	 $('#listGroupName option').remove();
-	 $('<option/>', {value: '-1', html: 'Выбрать группу', selected: true}).appendTo('#listGroupName');  
+	 $('<option/>', {value: '99999', html: 'Выбрать группу', selected: true}).appendTo('#listGroupName');  
+	 $('<option/>', {value: '99998', html: 'Выбрать аварию', selected: true}).appendTo('#listAlarmName');
      $.each($(listFlow), function(idx, obj) {
     	$('<option/>', {value: obj.idGroup, html: obj.nameGroup, selected: false}).appendTo('#listGroupName');
     	//$('#listGroupName').append('<option value="' + obj.idGroup + '">' + obj.nameGroup + '</option>');   	 
@@ -103,7 +114,7 @@
 	        "data": "$(this).serialize()",
 	        success: function(data){
 	        	$('#listAlarmName option').remove();
-	       	    $('<option/>', {value: '-2', html: 'Выбрать аварию', selected: true}).appendTo('#listAlarmName');  
+	       	    $('<option/>', {value: '99998', html: 'Выбрать аварию', selected: true}).appendTo('#listAlarmName');  
 	            $.each($(data), function(idx, obj) {
 	           	$('<option/>', {value: obj.idAlarm, html: obj.alName, selected: false}).appendTo('#listAlarmName');
 	          });

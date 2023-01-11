@@ -25,10 +25,10 @@ public class QueryAlarmsAll {
     		+ " where alarms.TSActive between :dateSt and :dateEn";
     
     /**
-     * 
+     * The query on tables TblAlarm + NameAlarm + AlarmGroup
      * @param dateStart
      * @param dateEnd
-     * @return
+     * @return List<TblAlarmDTO>
      */
 	public List<TblAlarmDTO> getTblAlarmDTO(String dateStart, String dateEnd){
 		listTblAlarmDTO.clear();
