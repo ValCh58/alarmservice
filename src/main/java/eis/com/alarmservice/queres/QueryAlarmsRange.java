@@ -16,13 +16,7 @@ import eis.com.alarmservice.dto.TblAlarmDTO;
 @Component
 public class QueryAlarmsRange {
 	
-	
-	
-	public QueryAlarmsRange() {
-		super();
-	}
-
-
+	public QueryAlarmsRange() {super();}
 
 	@PersistenceContext
 	private EntityManager em;
@@ -52,14 +46,19 @@ public class QueryAlarmsRange {
 		   return listTblAlarmDTO;
 		}
 		
-		List<TblAlarmDTO> listDto = list.stream().map(this::convertToTblAlarmDto).collect(Collectors.toList());
-	
-		return listDto;
+		//List<TblAlarmDTO> listDto = list.stream().map(this::convertToTblAlarmDto).collect(Collectors.toList());
+		return list.stream().map(this::convertToTblAlarmDto).collect(Collectors.toList());
     }
     
-private TblAlarmDTO convertToTblAlarmDto(Tuple t) {
+    
+    /**
+	 * Convertion to DTO object
+	 * @param t
+	 * @return
+	 */
+    private TblAlarmDTO convertToTblAlarmDto(Tuple t) {
 	
-	   TblAlarmDTO ta = new TblAlarmDTO(
+	    TblAlarmDTO ta = new TblAlarmDTO(
 				         (String)t.get("tsactive"),
 				         (String)t.get("tsinactive")==null?"":(String)t.get("tsinactive"),
 				         (String)t.get("nameAlarm"),
@@ -68,11 +67,14 @@ private TblAlarmDTO convertToTblAlarmDto(Tuple t) {
 				         (Integer)t.get("alarmId")
 				         );
 	return ta;
-		
 	}
-	
-    	
-	    
+	    	
+	/**
+	 * Prepared SQL query    
+	 * @param idGroup
+	 * @param idAlarm
+	 * @return
+	 */
     private String prepearQuery(Integer idGroup, Integer idAlarm) {
     	
     	StringBuilder queryStringBuilder = new StringBuilder(
@@ -85,7 +87,6 @@ private TblAlarmDTO convertToTblAlarmDto(Tuple t) {
     	
     	if (idGroup != 99999) {
     		queryStringBuilder.append("and(alarms.groupId=:idGroup)").toString();
-			
 		}
     	if (idAlarm != 99998) {
 			queryStringBuilder.append("and(alarms.alarmId=:idAlarm)").toString();

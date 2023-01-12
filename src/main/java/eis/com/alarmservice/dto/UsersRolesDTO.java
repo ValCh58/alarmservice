@@ -8,6 +8,9 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class UsersRolesDTO {
+	public UsersRolesDTO() {
+		super();
+	}
 	private Integer id;
 	private String last_name;
 	private String name;

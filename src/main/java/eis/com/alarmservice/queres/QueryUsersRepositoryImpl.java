@@ -1,10 +1,13 @@
 package eis.com.alarmservice.queres;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.hibernate.transform.ResultTransformer;
+import javax.persistence.Tuple;
+
 import org.springframework.stereotype.Component;
 
 import eis.com.alarmservice.dto.UsersRolesDTO;
@@ -15,52 +18,50 @@ public class QueryUsersRepositoryImpl implements QueryUsersRepository{
 	
 	public QueryUsersRepositoryImpl() {}
 
-	@PersistenceContext(name="housingEntityManager")
+	@PersistenceContext
     private EntityManager em;
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<UsersRolesDTO> queryUsersRoles() {
+	private List<UsersRolesDTO> usersrolesdto = new ArrayList<>(); 
+	private String qeryString = "SELECT users.user_id, users.last_name, "
+                              + "users.name, user_name, users.active, "
+         	                  + "users.email, roles.role FROM users, user_role, roles "
+                              + "where users.user_id = user_role.user_id "
+                              + "and user_role.role_id = roles.role_id order by users.last_name";
+	
+	/**
+     * The query on tables users + user_role + roles
+     * @param dateStart
+     * @param dateEnd
+     * @return List<TblAlarmDTO>
+     */
+	public List<UsersRolesDTO> queryUsersRoles(){
+		usersrolesdto.clear();
 		
-		@SuppressWarnings("deprecation")
-		List<UsersRolesDTO> usersrolesdto = em.createNativeQuery("SELECT users.user_id, "
-				                                                    + "users.last_name, "
-				                                                    + "users.name, "
-				                                                    + "user_name, "
-				                                                    + "users.active, "
-			                                                     	+ "users.email, "
-				                                                    + "roles.role"
-		    	                                                    + " FROM users, user_role, roles "
-		    	          + "where users.user_id = user_role.user_id and user_role.role_id = roles.role_id order by users.last_name")
-				.unwrap( org.hibernate.query.Query.class )
-				.setResultTransformer(
-					    new ResultTransformer() {
-					    	private static final long serialVersionUID = -7293069291041022095L;
-						
-					    	@Override
-					        public Object transformTuple(
-					            Object[] tuple,
-					            String[] aliases) {
-					            return new UsersRolesDTO(
-					                (Integer) tuple[0],
-					                (String) tuple[1],
-					                (String) tuple[2],
-					                (String) tuple[3],
-					                (Boolean) tuple[4],
-					                (String) tuple[5],
-					                (String) tuple[6]
-					            );
-					        }
-					 
-					        @SuppressWarnings("rawtypes")
-							@Override
-					        public List transformList(List collection) {
-					            return collection;
-					        }
-					    }
-					)
-					.getResultList();
-        return usersrolesdto;
+		@SuppressWarnings("unchecked")
+		List<Tuple> list = em.createNativeQuery(qeryString, Tuple.class).getResultList();
+		
+		if(list.isEmpty()) {
+			usersrolesdto.add(new UsersRolesDTO());
+			return usersrolesdto;
+		}
+		
+		return list.stream().map(this::convertToUsersRolesDTO).collect(Collectors.toList());
 	}
-
+	
+	/**
+	 * Convertion to DTO object
+	 * @param t
+	 * @return
+	 */
+	private UsersRolesDTO convertToUsersRolesDTO(Tuple t) {
+		
+		UsersRolesDTO usersRolesDTO = new UsersRolesDTO((Integer) t.get("user_id"),
+                                                        (String) t.get("last_name"),
+                                                        (String) t.get("name"),
+                                                        (String) t.get("user_name"),
+                                                        (Boolean) t.get("active"),
+                                                        (String) t.get("email"),
+                                                        (String) t.get("role"));
+		return usersRolesDTO;
+	}
+	
 }

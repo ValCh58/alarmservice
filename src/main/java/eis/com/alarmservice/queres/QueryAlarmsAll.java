@@ -2,6 +2,7 @@ package eis.com.alarmservice.queres;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,19 +50,25 @@ public class QueryAlarmsAll {
 			return listTblAlarmDTO;
 		}
 		
-		for (Tuple t : list) {
-			TblAlarmDTO ta = new TblAlarmDTO(
-					         (String)t.get("tsactive"),
-					         (String)t.get("tsinactive")==null?"":(String)t.get("tsinactive"),
-					         (String)t.get("nameAlarm"),
-					         (String)t.get("nameGroup"),
-					         (Integer)t.get("groupId"),
-					         (Integer)t.get("alarmId")
-					         );
-			listTblAlarmDTO.add(ta);
-		}
-			
-		return listTblAlarmDTO;
+		return list.stream().map(this::convertToTblAlarmDto).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Convertion to DTO object
+	 * @param t
+	 * @return
+	 */
+	private TblAlarmDTO convertToTblAlarmDto(Tuple t) {
+		
+	    TblAlarmDTO ta = new TblAlarmDTO(
+				         (String)t.get("tsactive"),
+				         (String)t.get("tsinactive")==null?"":(String)t.get("tsinactive"),
+				         (String)t.get("nameAlarm"),
+				         (String)t.get("nameGroup"),
+				         (Integer)t.get("groupId"),
+				         (Integer)t.get("alarmId")
+				         );
+	return ta;
 	}
 
 	
