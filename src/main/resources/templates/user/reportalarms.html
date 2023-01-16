@@ -65,6 +65,8 @@
 		    crossorigin="anonymous"></script>
     <!-- Для обеспечения работы $.ajax -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!-- https://sheetjs.com/ -->
+    <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
    <script th:inline="javascript">
    
@@ -195,8 +197,26 @@
     });
     setMyCurrDate();
   });  
-
+   
    /**
+   * Excel report
+   */
+   $('#btn-print').on('click', function(){
+	   
+	   ExportToExcel('xlsx');
+	   
+   });
+   
+   function ExportToExcel(type, fn, dl) {
+       var elt = document.getElementById('table-report-alarm');
+       var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+       return dl ?
+           XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+           XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+   }
+   
+
+   /************************************************************
    * Установка текущей даты
    */
    function setMyCurrDate(){
