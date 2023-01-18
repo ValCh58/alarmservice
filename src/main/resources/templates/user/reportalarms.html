@@ -15,9 +15,6 @@
  -->
 <!-- Для обеспечения работы $.ajax -->
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<!-- https://sheetjs.com/ --> 
-<script src="/js/xlsx.full.min.js"></script>
-
 
 
 </head>
@@ -72,7 +69,9 @@
 		 </div>
 	</div> 
 
-         
+   <!-- https://sheetjs.com/ --> 
+   <script src="/js/xlsx.full.min.js"></script>    
+     
    <script th:inline="javascript">
       
    /**
@@ -212,9 +211,19 @@
    function ExportToExcel_19(){
 	   var table_rep = document.getElementById("table-report-alarm");
 	   var workbook = XLSX.utils.table_to_book(table_rep);
-	   //workbook.SheetNames.push("Мониторинг аварий");
-	   //workbook.Sheets["Мониторинг аварий"];
-	   var name = "Мониторинг аварий " + $('#datefrom').val() + "-" + $('#dateto').val();
+	   const ws = workbook.Sheets.Sheet1;
+	   var wscols = [
+		    {wch:4},
+		    {wch:18},
+		    {wch:18},
+		    {wch:12},
+		    {wch:30},
+		    {wch:12},
+		    {wch:22}
+		];
+	   
+       ws['!cols'] = wscols;
+	   var name = "Мониторинг_Тревог_" + myFormatDate($('#datefrom').val()) + "_" + myFormatDate($('#dateto').val());
 	   XLSX.writeFile(workbook, name + ".xls",  {compression: true });
    }
    
