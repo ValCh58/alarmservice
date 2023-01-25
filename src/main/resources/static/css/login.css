@@ -17,22 +17,25 @@ html, body {
     margin: 0 auto;
 }
 
-#imgLog{
+/*#imgLog{
 	opacity: 0.5;
 	
-}
+}*/
 
 .form-signin-heading {
     text-align:center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    font-style: normal;
 }
 
 
 .form-control {
     position: relative;
-    font-size: 16px;
+    font-size: 14px;
     height: auto;
-    padding: 10px;
+    padding: 1px;
 }
 
 input[type="text"] {
@@ -42,7 +45,7 @@ input[type="text"] {
 }
 
 input[type="password"] {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     border-top-left-radius: 30;
     border-top-right-radius: 30;
 }
@@ -52,10 +55,11 @@ input[type="password"] {
     color: #fff;
     position: fixed;
     bottom: 0;
-    height: 18px;
+    height: 20px;
     width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: small;
+    font-family: Times New Roman, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-style: normal;
 }
 
 

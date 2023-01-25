@@ -26,7 +26,7 @@ public class CtrlMonitorAlarms {
 	}
 
 	/**
-	 * Create table id="table-alarm-monitor"
+	 * Create table html with id="table-alarm-monitor"
 	 * @return ModelAndView
 	 */
 	@GetMapping(value="/user/view_alarms")

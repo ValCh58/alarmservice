@@ -11,21 +11,34 @@ import javax.persistence.Tuple;
 import org.springframework.stereotype.Component;
 
 import eis.com.alarmservice.dto.TblAlarmDTO;
+import eis.com.alarmservice.utility.ReportUtils;
 
 @Component
 public class QueryAlarmsAll {
 	
+	private ReportUtils reportUtils; 
+	
 	@PersistenceContext
 	private EntityManager em;
 	private List<TblAlarmDTO> listTblAlarmDTO = new ArrayList<>();
-    private String qeryString = "select alarms.tsactive, iiF(tsinactive=\"01-01-1601 00:00:00\", \"\", tsinactive) as tsinactive, alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId\r\n"
-    		+ " from(select iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive,\r\n"
+    private String qeryString = "select alarms.tsact_order, alarms.tsactive, iiF(tsinactive=\"01-01-1601 00:00:00\", \"\", tsinactive) as tsinactive, alarms.nameAlarm, alarms.nameGroup, alarms.groupId, alarms.alarmId\r\n"
+    		+ " from(select "
+    		+ " strftime('%Y-%m-%d %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')) as tsact_order,"
+    		+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive,\r\n"
     		+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch')), \"\") as TSInactive,  \r\n"
     		+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm,\r\n"
     		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms\r\n"
-    		+ " where alarms.TSActive between :dateSt and :dateEn";
+    		+ " where alarms.tsact_order between :dateSt and :dateEn";
     
-    /**
+    
+    
+    
+    public QueryAlarmsAll(ReportUtils reportUtils) {
+		super();
+		this.reportUtils = reportUtils;
+	}
+
+	/**
      * The query on tables TblAlarm + NameAlarm + AlarmGroup
      * @param dateStart
      * @param dateEnd
@@ -34,9 +47,9 @@ public class QueryAlarmsAll {
 	public List<TblAlarmDTO> getTblAlarmDTO(String dateStart, String dateEnd){
 		listTblAlarmDTO.clear();
 		
-		StringBuilder dateSt = new StringBuilder(dateStart);
+		StringBuilder dateSt = reportUtils.ReversDate(new StringBuilder(dateStart));
 		dateSt.append(" 00:00:00");
-		StringBuilder dateEn = new StringBuilder(dateEnd);
+		StringBuilder dateEn = reportUtils.ReversDate(new StringBuilder(dateEnd));
 		dateEn.append(" 23:59:59");
 		
 		@SuppressWarnings("unchecked")
@@ -70,6 +83,30 @@ public class QueryAlarmsAll {
 				         );
 	return ta;
 	}
-
+	
+//	/**
+//	 * 
+//	 * 
+//	 */
+//    private StringBuilder ReversDate(StringBuilder sb) {
+//       char err[] = {'0','0','0','0','-','0','0','-','0','0',' ','0','0',':','0','0',':','0','0'};
+//       char[] str = sb.reverse().toString().toCharArray();
+//       if(str.length > 0) {
+//    	   swap(str, 5, 6);
+//    	   swap(str, 8, 9);
+//    	   swap(str, 0, 3);
+//    	   swap(str, 1, 2);
+//       }else {
+//    	   return (new StringBuilder()).append(err);
+//       }
+//       return (new StringBuilder()).append(str);
+//    }
+//    
+//    private void swap(char[] src, int beg, int end) {
+//    	
+//    	char a = src[end];
+//        src[end] = src[beg];
+//        src[beg] = a;
+//    }
 	
 }

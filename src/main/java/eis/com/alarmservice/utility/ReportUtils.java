@@ -101,4 +101,28 @@ public String prepUrl(String pathReport, String numUspd, String dateFrom, String
 	return url;
 }    
 
+/**
+ * To make format date 'YYYY-mm-dd' for sorting
+ * @return StringBuilder
+ */
+public StringBuilder ReversDate(StringBuilder sb) {
+   char err[] = {'0','0','0','0','-','0','0','-','0','0',' ','0','0',':','0','0',':','0','0'};
+   char[] str = sb.reverse().toString().toCharArray();
+   if(str.length > 0) {
+	   swap(str, 5, 6);
+	   swap(str, 8, 9);
+	   swap(str, 0, 3);
+	   swap(str, 1, 2);
+   }else {
+	   return (new StringBuilder()).append(err);
+   }
+   return (new StringBuilder()).append(str);
+}
+
+private void swap(char[] src, int beg, int end) {
+	char a = src[end];
+    src[end] = src[beg];
+    src[beg] = a;
+}
+
 }
