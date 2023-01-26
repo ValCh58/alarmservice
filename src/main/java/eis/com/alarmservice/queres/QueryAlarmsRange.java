@@ -17,9 +17,9 @@ import eis.com.alarmservice.utility.ReportUtils;
 @Component
 public class QueryAlarmsRange {
 	
+	//Component
 	private ReportUtils reportUtils;
-	
-	
+		
 	public QueryAlarmsRange(ReportUtils reportUtils) {
 		super();
 		this.reportUtils = reportUtils;
@@ -28,7 +28,16 @@ public class QueryAlarmsRange {
 	@PersistenceContext
 	private EntityManager em;
 	private List<TblAlarmDTO> listTblAlarmDTO = new ArrayList<>();
-	    
+	
+	/**
+	 * Выполнение native SQL запроса
+	 * 
+	 * @param dateStart формат dd-mm-YYYYY
+	 * @param dateEnd   формат dd-mm-YYYYY
+	 * @param idGroup   номер группы
+	 * @param idAlarm   номер аварии
+	 * @return List<TblAlarmDTO> data of query
+	 */
     public List<TblAlarmDTO> getTblAlarmDTO(String dateStart, String dateEnd, Integer idGroup, Integer idAlarm){
 		listTblAlarmDTO.clear();
 		String strSql = prepearQuery(idGroup, idAlarm);
@@ -37,23 +46,23 @@ public class QueryAlarmsRange {
 		StringBuilder dateEn = reportUtils.ReversDate(new StringBuilder(dateEnd));
 		dateEn.append(" 23:59:59");
 		
-		Query query = em.createNativeQuery(strSql, Tuple.class).setParameter("dateSt", dateSt.toString()).setParameter("dateEn", dateEn.toString());
-		if(idGroup != 99999) {
+		Query query = em.createNativeQuery(strSql, Tuple.class)
+				        .setParameter("dateSt", dateSt.toString())  //date format YYYY-mm-dd
+				        .setParameter("dateEn", dateEn.toString()); //date format YYYY-mm-dd
+		if(idGroup != NoAlrm.NO_ID_GROUP.getCod()/*99999*/) {
 		   query.setParameter("idGroup", idGroup);
 		}
-		if(idAlarm != 99998) {
+		if(idAlarm != NoAlrm.NO_ID_ALARM.getCod()/*99998*/) {
 		   query.setParameter("idAlarm", idAlarm);
 		}
 		
 		@SuppressWarnings("unchecked")
 		List<Tuple> list = query.getResultList();
-		
 		if(list.isEmpty()) {
 		   listTblAlarmDTO.add(new TblAlarmDTO(dateSt.toString(), dateEn.toString(), "Нет данных", "Нет данных", 0, 0));
 		   return listTblAlarmDTO;
 		}
 		
-		//List<TblAlarmDTO> listDto = list.stream().map(this::convertToTblAlarmDto).collect(Collectors.toList());
 		return list.stream().map(this::convertToTblAlarmDto).collect(Collectors.toList());
     }
     
@@ -77,32 +86,33 @@ public class QueryAlarmsRange {
 	}
 	    	
 	/**
-	 * Prepared SQL query    
-	 * @param idGroup
-	 * @param idAlarm
+	 * Prepared native SQL query    
+	 * @param idGroup номер группы
+	 * @param idAlarm номер аварии
 	 * @return
 	 */
     private String prepearQuery(Integer idGroup, Integer idAlarm) {
     	
     	StringBuilder queryStringBuilder = new StringBuilder(
-	              "select alarms.tsact_order, alarms.tsactive, "
-	            + "iiF(tsinactive=\"01-01-1601 00:00:00\", \"\", tsinactive) as tsinactive, "
+	              " select alarms.tsactive, "
+	            + " iiF(tsinactive=\"01-01-1601 00:00:00\", \"\", tsinactive) as tsinactive, "
 	            + " alarms.nameAlarm, "
 	            + " alarms.nameGroup, "
 	            + " alarms.groupId, "
 	            + " alarms.alarmId "
-	            + " from ("
+	            + " from ( select "
 	            + " strftime('%Y-%m-%d %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')) as tsact_order,"
-	            + " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive,\r\n"
-	    		+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch')), \"\") as TSInactive,\r\n"
-	    		+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm,\r\n"
-	    		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms\r\n"
+	            + " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSActive/10000000) - 11644473600), 'unixepoch')), \"\") as TSActive, "
+	    		+ " iFNULL(strftime('%d-%m-%Y %H:%M:%S', datetime(((TSInactive/10000000) - 11644473600), 'unixepoch')), \"\") as TSInactive, "
+	    		+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm, "
+	    		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId "
+	    		+ " from TblAlarm ) as alarms "
 	    		+ " where (alarms.tsact_order between :dateSt and :dateEn)");
     	
-    	if (idGroup != 99999) {
+    	if (idGroup != NoAlrm.NO_ID_GROUP.getCod()) {
     		queryStringBuilder.append("and(alarms.groupId=:idGroup)").toString();
 		}
-    	if (idAlarm != 99998) {
+    	if (idAlarm != NoAlrm.NO_ID_ALARM.getCod()) {
 			queryStringBuilder.append("and(alarms.alarmId=:idAlarm)").toString();
 		}
     	
