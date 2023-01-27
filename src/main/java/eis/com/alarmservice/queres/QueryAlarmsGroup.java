@@ -2,9 +2,11 @@ package eis.com.alarmservice.queres;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
 
 import org.springframework.stereotype.Component;
 
@@ -30,10 +32,10 @@ public class QueryAlarmsGroup {
 			+ "             iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as nameGroup, \r\n"
 			+ "             groupId \r\n"
 			+ "        from TblAlarm \r\n"
-			+ "        where (tsact_order between : startDate and : finDate) \r\n"
+			+ "        where (tsact_order between :dateSt and :dateEn) \r\n"
 			+ "        ) as group_tsact\r\n"
 			+ " group by group_tsact.NameAlarm, group_tsact.NameGroup\r\n"
-			+ " having  group_tsact.GroupId = :idGroup");
+			+ " having  group_tsact.GroupId = :groupId");
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -47,5 +49,43 @@ public class QueryAlarmsGroup {
 	 * @param idGroup   номер группы
 	 * @return List<TblAlarmGroupDTO> data of query
 	 */
+	public List<TblAlarmGroupDTO> getTblAlarmGroupDTO(String dateStart, String dateEnd, Integer groupId){
+		
+		listTblAlarmGroupDTO.clear();
+		StringBuilder dateSt = reportUtils.ReversDate(new StringBuilder(dateStart));
+		dateSt.append(" 00:00:00");
+		StringBuilder dateEn = reportUtils.ReversDate(new StringBuilder(dateEnd));
+		dateEn.append(" 23:59:59");
+		
+		@SuppressWarnings("unchecked")
+		List<Tuple> list = em.createNativeQuery(sqlString.toString(), Tuple.class)
+		                     .setParameter("dateSt", dateSt.toString())
+		                     .setParameter("dateEn", dateEn.toString())
+		                     .setParameter("groupId", groupId)
+		                     .getResultList();
+		
+		if(list.isEmpty()) {
+			listTblAlarmGroupDTO.add(new TblAlarmGroupDTO(0, "NoData", "NoData", 0));
+			return listTblAlarmGroupDTO;
+		}
+		return list.stream().map(this::convertToTblAlarmGroupDto).collect(Collectors.toList());
+		
+	}
+	
+	/**
+	 * Convertion to DTO object
+	 * @param t
+	 * @return
+	 */
+	private TblAlarmGroupDTO convertToTblAlarmGroupDto(Tuple t) {
+		
+	    TblAlarmGroupDTO ta = new TblAlarmGroupDTO(
+	    		              (Integer)t.get("countRow"),
+	    		              (String)t.get("nameAlarm")==null?"":(String)t.get("nameAlarm"),
+	    		              (String)t.get("nameGroup")==null?"":(String)t.get("nameGroup"),
+				              (Integer)t.get("groupId")
+				              );
+	return ta;
+	}
 
 }

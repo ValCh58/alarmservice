@@ -31,10 +31,7 @@ public class QueryAlarmsAll {
     		+ " iFNULL((select alarm_name from AlarmName an where an.id_alarm = AlarmId and an.id_alarm_group = GroupId), \"\") as NameAlarm,\r\n"
     		+ " iFNULL((select name_group from AlarmGroup ag where ag.id_group = GroupId), \"\") as NameGroup, GroupId, AlarmId from TblAlarm ) as alarms\r\n"
     		+ " where alarms.tsact_order between :dateSt and :dateEn";
-    
-    
-    
-    
+        
     public QueryAlarmsAll(ReportUtils reportUtils) {
 		super();
 		this.reportUtils = reportUtils;
@@ -83,6 +80,6 @@ public class QueryAlarmsAll {
 				         (Integer)t.get("groupId"),
 				         (Integer)t.get("alarmId")
 				         );
-	return ta;
+	    return ta;
 	}
 }
