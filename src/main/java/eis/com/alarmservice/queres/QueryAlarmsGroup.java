@@ -10,7 +10,7 @@ import javax.persistence.Tuple;
 
 import org.springframework.stereotype.Component;
 
-import eis.com.alarmservice.dto.TblAlarmGroupDTO;
+import eis.com.alarmservice.dto.DiagAlarmGroupDTO;
 import eis.com.alarmservice.utility.ReportUtils;
 
 
@@ -39,7 +39,7 @@ public class QueryAlarmsGroup {
 	
 	@PersistenceContext
 	private EntityManager em;
-	private List<TblAlarmGroupDTO> listTblAlarmGroupDTO = new ArrayList<>();
+	private List<DiagAlarmGroupDTO> listTblAlarmGroupDTO = new ArrayList<>();
 	
 	/**
 	 * Выполнение native SQL запроса
@@ -49,7 +49,7 @@ public class QueryAlarmsGroup {
 	 * @param idGroup   номер группы
 	 * @return List<TblAlarmGroupDTO> data of query
 	 */
-	public List<TblAlarmGroupDTO> getTblAlarmGroupDTO(String dateStart, String dateEnd, Integer groupId){
+	public List<DiagAlarmGroupDTO> getTblAlarmGroupDTO(String dateStart, String dateEnd, Integer groupId){
 		
 		listTblAlarmGroupDTO.clear();
 		StringBuilder dateSt = reportUtils.ReversDate(new StringBuilder(dateStart));
@@ -65,7 +65,7 @@ public class QueryAlarmsGroup {
 		                     .getResultList();
 		
 		if(list.isEmpty()) {
-			listTblAlarmGroupDTO.add(new TblAlarmGroupDTO(0, "NoData", "NoData", 0));
+			listTblAlarmGroupDTO.add(new DiagAlarmGroupDTO(0, "NoData", "NoData", 0));
 			return listTblAlarmGroupDTO;
 		}
 		return list.stream().map(this::convertToTblAlarmGroupDto).collect(Collectors.toList());
@@ -77,9 +77,9 @@ public class QueryAlarmsGroup {
 	 * @param t
 	 * @return
 	 */
-	private TblAlarmGroupDTO convertToTblAlarmGroupDto(Tuple t) {
+	private DiagAlarmGroupDTO convertToTblAlarmGroupDto(Tuple t) {
 		
-	    TblAlarmGroupDTO ta = new TblAlarmGroupDTO(
+	    DiagAlarmGroupDTO ta = new DiagAlarmGroupDTO(
 	    		              (Integer)t.get("countRow"),
 	    		              (String)t.get("nameAlarm")==null?"":(String)t.get("nameAlarm"),
 	    		              (String)t.get("nameGroup")==null?"":(String)t.get("nameGroup"),
