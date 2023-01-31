@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+   <meta charset="utf-8">
+   <title>Диаграмма по группам аварий</title>
+    
+   <link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+	rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" th:href="@{/css/mdbtablescroll.css}">	
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
 </head>
 <body>
-<p4> CHART PIEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE</p4>
+
+<div class="container">
+     <div class="justify-content-center  align-items-center" style="margin-top: 3px">
+        <div class="col text-nowrap">
+			<p style="text-align: center;font-size: 1.4em;">Диаграмма по группам аварий</p>
+			<div th:insert="~{fragments/filter_group_chart :: fr_filter_group_chart}"></div>
+		</div>
+	 </div>		
+</div>
+
+<div class="container" id="main_div"></div>
 </body>
 </html>

@@ -22,25 +22,25 @@ public class ChartDiagramAlarm {
 	}
 
 	/**
-	 * Диаграмма  по авариям в группе
+	 * Диаграмма  по авариям в разрезе групп
 	 * 
-	 * @return
+	 * @return ModelAndView "user/chartgroup"
 	 */
-	@GetMapping(value="/user/chart_group_alarms")//
+	@GetMapping(value="/user/chart_group_alarms")
 	public ModelAndView getViewChartGroupAlarms() {
 		ModelAndView modelandview = new ModelAndView();
 		List<DiagAlarmGroupDTO> list = srvMonitorAlarm.getQueryAlarmGroupDto("01-07-2022", "05-07-2022", 5);
 		modelandview.addObject("list", list);
-		modelandview.setViewName("user/chartgroup");
+		modelandview.setViewName("user/chartalarmgroup");
 		return modelandview;
 	}
 	
 	/**
 	 * Диаграмма по группам аварий
 	 * 
-	 * @return
+	 * @return ModelAndView "user/chartgroup"
 	 */
-	@GetMapping(value="/user/chart_groups")//
+	@GetMapping(value="/user/chart_groups")
 	public ModelAndView getViewChartGroup() {
 		ModelAndView modelandview = new ModelAndView();
 		List<DiagGroupDTO> list = srvMonitorAlarm.getQueryGroupDto("01-07-2022", "05-07-2022");
