@@ -23,5 +23,28 @@
 </div>
 
 <div class="container" id="main_div"></div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+<script th:src="@{/js/chartgroupalarm.js}"></script>
+
+<script  th:inline="javascript"> 
+//The editor misinterpret express of thymeleaf
+var listFlow = [[${listGroupDiagram}]];//Fuckditor!!!
+
+$(document).ready(function(){
+	const dateFrom = $('#datefrom').val()!= '' ? $('#datefrom').val() : myDateNow();
+	const dateTo = $('#dateto').val()!= '' ? $('#dateto').val() : myDateNow();
+	$('#datefrom').val(dateFrom);
+	$('#dateto').val(dateTo);
+	chartDiagramGroup();
+});
+
+
+
+
+</script>
+
 </body>
 </html>

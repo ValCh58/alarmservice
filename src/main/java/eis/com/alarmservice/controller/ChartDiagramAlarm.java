@@ -43,8 +43,8 @@ public class ChartDiagramAlarm {
 	@GetMapping(value="/user/chart_groups")
 	public ModelAndView getViewChartGroup() {
 		ModelAndView modelandview = new ModelAndView();
-		List<DiagGroupDTO> list = srvMonitorAlarm.getQueryGroupDto("01-07-2022", "05-07-2022");
-		modelandview.addObject("list", list);
+		List<DiagGroupDTO> listGroupDiagram = srvMonitorAlarm.getQueryGroupDto("01-07-2022", "05-07-2022");
+		modelandview.addObject("listGroupDiagram", listGroupDiagram);
 		modelandview.setViewName("user/chartgroup");
 		return modelandview;
 	}
