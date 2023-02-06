@@ -1,11 +1,15 @@
+
+
+
+
 /**
  * Making diagram on the alarms groups
  */
 
 var ret = 0;//Для присвоения id <canvas id='myChart'+idx>
 var i = 0;
-var arrChartMain = [ [ [] ] ];
-var arrChart = [ [ [] ] ];
+var arrChartMain = [];
+var arrChart = [];
 var chartObj = [];
 
 /**
@@ -18,8 +22,8 @@ function destroyChart(){
 		chartObj[i].destroy();
 	}
 	chartObj.lenght = 0;
-	arrChartMain[0].length = 0;
-	arrChart[0].length = 0;
+	arrChartMain.length = 0;
+	arrChart.length = 0;
 }
 
 /**
@@ -28,19 +32,22 @@ function destroyChart(){
  */
 function chartDiagramGroup(){
 	
- arrChartMain[0][ret] = new Array();
- arrChart[0][ret] = new Array();
+ arrChartMain = new Array();
+ arrChart = new Array();
 	
  /**
  * Заполнение данными массивов для построения диаграммы
  */
 i = 0;
 _.each(listFlow, function(list) {
-	    arrChartMain[0][ret][i] = list.countRow == undefined ? 0 : list.countRow;
-		arrChart[0][ret][i] = list.nameGroup;//str;
-		
-		i++;
+	  if(list.length != 0){
+	    arrChartMain.push(list.countRow === undefined ? 0 : list.countRow);
+		arrChart.push(list.nameGroup);
+	  }
+	  i++;
 });	
+
+  ret = makeCharts(ret, arrChart, arrChartMain, 'My label', 'rgba(1, 1, 255, 0.4)', 'rgba(1, 1, 255, 1)');
 	
 }
 
@@ -69,6 +76,56 @@ function addCanvas(idx){
 }
 
 
+function addChart(idx, arrayLabel, arrayData, label, backColor, borderColor){
+var ctx = null;
+var myChart = null;
+
+ctx = document.getElementById('myChart'+idx).getContext('2d');
+myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: arrayLabel,
+        datasets: [{
+	        minBarLength: 2,
+            label: label,
+            data: arrayData,
+            backgroundColor: [
+                backColor
+            ],
+            borderColor: [
+                borderColor
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+		
+		responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Распределение аварий по группам'
+      },
+      colors:{
+		  enabled:false
+	  }
+    },
+	    
+       scales: {
+        	x: {
+              },
+            y: {
+                beginAtZero: true,
+                
+            }
+        }
+    }
+});
+ return myChart;
+}
 
 
 
