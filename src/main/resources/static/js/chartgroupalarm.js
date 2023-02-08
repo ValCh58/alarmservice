@@ -1,11 +1,8 @@
 
 
-
-
 /**
  * Making diagram on the alarms groups
  */
-
 var ret = 0;//Для присвоения id <canvas id='myChart'+idx>
 var i = 0;
 var arrChartMain = [];
@@ -47,7 +44,7 @@ _.each(listFlow, function(list) {
 	  i++;
 });	
 
-  ret = makeCharts(ret, arrChart, arrChartMain, 'My label', 'rgba(1, 1, 255, 0.4)', 'rgba(1, 1, 255, 1)');
+  ret = makeCharts(ret, arrChart, arrChartMain, 'Аварии в группах');
 	
 }
 
@@ -56,9 +53,9 @@ _.each(listFlow, function(list) {
  * Creating My Chart
  *
  */
-function makeCharts(idx, arrChart, arrChartMain, label, backColor, borderColor){
+function makeCharts(idx, arrChart, arrChartMain, label){
 	addCanvas(idx);
-	chartObj[idx] = addChart(idx, arrChart, arrChartMain, label, backColor, borderColor);
+	chartObj[idx] = addChart(idx, arrChart, arrChartMain, label);
 	return (++idx);
 }
 
@@ -76,7 +73,7 @@ function addCanvas(idx){
 }
 
 
-function addChart(idx, arrayLabel, arrayData, label, backColor, borderColor){
+function addChart(idx, arrayLabel, arrayData, label){
 var ctx = null;
 var myChart = null;
 
@@ -90,29 +87,32 @@ myChart = new Chart(ctx, {
             label: label,
             data: arrayData,
             backgroundColor: [
-                backColor
+               'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 164, 0.5)'
             ],
             borderColor: [
-                borderColor
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
             ],
             borderWidth: 1
         }]
     },
     options: {
-		
-		responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Распределение аварий по группам'
-      },
-      colors:{
-		  enabled:false
-	  }
-    },
+	   responsive: true,
+       
+       plugins: {
+         colors: {
+          forceOverride: true
+         }
+       },
 	    
        scales: {
         	x: {
