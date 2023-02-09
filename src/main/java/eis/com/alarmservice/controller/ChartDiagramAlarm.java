@@ -1,5 +1,7 @@
 package eis.com.alarmservice.controller;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -42,8 +44,10 @@ public class ChartDiagramAlarm {
 	 */
 	@GetMapping(value="/user/chart_groups")
 	public ModelAndView getViewChartGroup() {
+		var currentDate = LocalDateTime.now().toLocalDate().toString();
+		
 		ModelAndView modelandview = new ModelAndView();
-		List<DiagGroupDTO> listGroupDiagram = srvMonitorAlarm.getQueryGroupDto("01-07-2022", "15-07-2022");
+		List<DiagGroupDTO> listGroupDiagram = srvMonitorAlarm.getQueryGroupDto(currentDate, currentDate);
 		modelandview.addObject("listGroupDiagram", listGroupDiagram);
 		modelandview.setViewName("user/chartgroup");
 		return modelandview;

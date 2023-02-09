@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import eis.com.alarmservice.dto.AlarmNameDTO;
+import eis.com.alarmservice.dto.DiagGroupDTO;
 import eis.com.alarmservice.dto.TblAlarmDTO;
 import eis.com.alarmservice.service.SrvAlarmGroup;
 import eis.com.alarmservice.service.SrvMonitorAlarm;
@@ -34,13 +35,16 @@ public class GetDataFromAlarmName {
 	private UploadAndInsertAlarmName uploadAndInsertAlarmName;
 	private SrvAlarmGroup srvAlarmGroup;
 	
+	
     public GetDataFromAlarmName(SrvMonitorAlarm srvMonitorAlarm, Environment env, 
-			                    UploadAndInsertAlarmName uploadAndInsertAlarmName, SrvAlarmGroup srvAlarmGroup) {
+			                    UploadAndInsertAlarmName uploadAndInsertAlarmName, 
+			                    SrvAlarmGroup srvAlarmGroup) {
 		super();
 		this.srvMonitorAlarm = srvMonitorAlarm;
 		this.srvAlarmGroup = srvAlarmGroup;
 		this.env = env;
 		this.uploadAndInsertAlarmName = uploadAndInsertAlarmName;
+		
 	}
     
     /**
@@ -68,6 +72,20 @@ public class GetDataFromAlarmName {
 			                                                       @PathVariable("dateTo")   String dateTo){
 		
 		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryAlarmDto(dateFrom, dateTo));
+	}
+	
+	
+	/**
+     * result off query by dateFrom and dateTo in filter data
+     * @param dateFrom
+     * @param dateTo
+     * @return query results
+     */
+	@GetMapping(value="/user/chart_group_param/dateFrom/{dateFrom}/dateTo/{dateTo}")
+	public ResponseEntity <List<DiagGroupDTO>> recordsFromAlarmGroup(@PathVariable("dateFrom") String dateFrom, 
+			                                                        @PathVariable("dateTo")   String dateTo){
+		
+		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryGroupDto(dateFrom, dateTo));
 	}
 	
 	

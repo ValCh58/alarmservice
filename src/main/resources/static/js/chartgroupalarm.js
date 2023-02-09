@@ -27,7 +27,7 @@ function destroyChart(){
  * Making Diagram
  * 
  */
-function chartDiagramGroup(){
+function chartDiagramGroup(nameLabel){
 	
  arrChartMain = new Array();
  arrChart = new Array();
@@ -44,7 +44,7 @@ _.each(listFlow, function(list) {
 	  i++;
 });	
 
-  ret = makeCharts(ret, arrChart, arrChartMain, 'Аварии в группах');
+  ret = makeCharts(ret, arrChart, arrChartMain, nameLabel);
 	
 }
 
@@ -126,9 +126,6 @@ myChart = new Chart(ctx, {
 });
  return myChart;
 }
-
-
-
  
  /**
  * Сброс фильтрации

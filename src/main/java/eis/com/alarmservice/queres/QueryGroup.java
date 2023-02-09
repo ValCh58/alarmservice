@@ -48,11 +48,22 @@ public class QueryGroup {
 	 * @return List<TblAlarmGroupDTO> data of query
 	 */
 	public List<DiagGroupDTO> getTblGroupDTO(String dateStart, String dateEnd){
+		StringBuilder dateSt = null;
+		StringBuilder dateEn = null;
 		
 		listTblGroupDTO.clear();
-		StringBuilder dateSt = reportUtils.ReversDate(new StringBuilder(dateStart));
+		if(!isRevers(dateStart)) {
+		   dateSt = reportUtils.ReversDate(new StringBuilder(dateStart));//Format YYYYY-mm-dd for sorting
+		}else {
+			dateSt = new StringBuilder(dateStart);
+		}
 		dateSt.append(" 00:00:00");
-		StringBuilder dateEn = reportUtils.ReversDate(new StringBuilder(dateEnd));
+		
+		if(!isRevers(dateEnd)) {
+		   dateEn = reportUtils.ReversDate(new StringBuilder(dateEnd));//Format YYYYY-mm-dd for sorting
+		}else {
+			dateEn = new StringBuilder(dateEnd);	
+		}
 		dateEn.append(" 23:59:59");
 		
 		@SuppressWarnings("unchecked")
@@ -81,6 +92,14 @@ public class QueryGroup {
 				              (Integer)t.get("groupId")
 				              );
 	return ta;
+	}
+	
+	/**
+	 * Check date for reverse
+	 * @retun true is not reverse 
+	 */
+	private boolean isRevers(String str) {
+		return str.charAt(4) == '-';
 	}
 
 }

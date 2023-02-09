@@ -41,14 +41,58 @@
 //The editor misinterpret express of thymeleaf
 var listFlow = [[${listGroupDiagram}]];//Fuckditor!!!
 
+/**
+ * Event by Load Document 
+ *
+ */
 $(document).ready(function(){
 	const dateFrom = $('#datefrom').val()!= '' ? $('#datefrom').val() : myDateNow();
 	const dateTo = $('#dateto').val()!= '' ? $('#dateto').val() : myDateNow();
 	$('#datefrom').val(dateFrom);
 	$('#dateto').val(dateTo);
-	chartDiagramGroup();
+	chartDiagramGroup('Группы аварий');
 });
 
+
+/**
+ * Фильтрация по дате 
+ *
+ */
+$(function(){ 
+	  $("#btn-filter").click(function(){
+		  $("#btn-filter").prop( "disabled", true);  
+		var in_canvas = document.getElementById('main_div');
+		destroyChart();
+		while (in_canvas.hasChildNodes()) {//Delete canvas
+		       in_canvas.removeChild(in_canvas.lastChild);
+		}
+		dateFrom = $('#datefrom').val()!= '' ? $('#datefrom').val() : myDateNow(); 
+		dateTo = $('#dateto').val()!= '' ? $('#dateto').val() : myDateNow();
+		$('#datefrom').val(dateFrom);
+		$('#dateto').val(dateTo);
+		  
+        $.ajax({
+		        "type": "get",
+		        "url": "/user/chart_group_param/dateFrom/" + dateFrom + "/dateTo/" + dateTo,
+		        "dataType": "json",
+		        "cache": "false",
+		        "data": "$(this).serialize()",
+		        success: function (data) {
+		        	if(data.length == 0){
+			        	alert('Данные не найдены. Измените параметры запроса');
+				    }else{
+		        	 listFlow = data;
+		        	 chartDiagramGroup('Группы аварий');
+				    }
+		        	$("#btn-filter").prop( "disabled", false);
+		        },
+		        error: function (x, e) {
+		          $("#btn-filter").prop( "disabled", false);
+                  alert('Данные не найдены. Измените параметры запроса.');
+	            }
+		    });  
+	  });
+});	
 
 
 
