@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import eis.com.alarmservice.dto.AlarmNameDTO;
+import eis.com.alarmservice.dto.DiagAlarmGroupDTO;
 import eis.com.alarmservice.dto.DiagGroupDTO;
 import eis.com.alarmservice.dto.TblAlarmDTO;
 import eis.com.alarmservice.service.SrvAlarmGroup;
@@ -102,6 +103,26 @@ public class GetDataFromAlarmName {
 			                                                             @PathVariable("idGroup") Integer idGroup, @PathVariable("idAlarm") Integer idAlarm){
 		
 		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryAlarmRangeDto(dateFrom, dateTo, idGroup, idAlarm));
+	}
+	
+	
+	/**
+	 * Create Diagram alarms in group
+     * result off query by dateFrom, dateTo, idGroup
+     * 
+     * @param dateFrom
+     * @param dateTo
+     * @param idGroup
+     * @param idAlarm
+     * 
+     * @return query results
+     */
+	@GetMapping(value="/user/chart_alarms_group_param/dateFrom/{dateFrom}/dateTo/{dateTo}/idGroup/{idGroup}")
+	public ResponseEntity <List<DiagAlarmGroupDTO>> recordsFromAlarmNameRange(@PathVariable("dateFrom") String dateFrom, @PathVariable("dateTo")   String dateTo,
+			                                                            @PathVariable("idGroup") Integer idGroup){
+		
+		return ResponseEntity.status(OK).body(srvMonitorAlarm.getQueryAlarmGroupDto(dateFrom, dateTo, idGroup));
+		//List<DiagAlarmGroupDTO> listAlarmGroup = srvMonitorAlarm.getQueryAlarmGroupDto("01-07-2022", "15-07-2022", 10);
 	}
 	
 	

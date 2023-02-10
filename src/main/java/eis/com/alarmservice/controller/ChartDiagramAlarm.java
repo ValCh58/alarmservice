@@ -1,6 +1,5 @@
 package eis.com.alarmservice.controller;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -8,8 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import eis.com.alarmservice.dto.AlarmGroupDTO;
 import eis.com.alarmservice.dto.DiagAlarmGroupDTO;
 import eis.com.alarmservice.dto.DiagGroupDTO;
+import eis.com.alarmservice.service.SrvAlarmGroup;
 import eis.com.alarmservice.service.SrvMonitorAlarm;
 
 @Controller
@@ -17,10 +18,12 @@ public class ChartDiagramAlarm {
 	
 	//Component
 	private SrvMonitorAlarm srvMonitorAlarm;
+	private SrvAlarmGroup srvAlarmGroup;
 
-	public ChartDiagramAlarm(SrvMonitorAlarm srvMonitorAlarm) {
+	public ChartDiagramAlarm(SrvMonitorAlarm srvMonitorAlarm, SrvAlarmGroup srvAlarmGroup) {
 		super();
 		this.srvMonitorAlarm = srvMonitorAlarm;
+		this.srvAlarmGroup = srvAlarmGroup;
 	}
 
 	/**
@@ -30,9 +33,13 @@ public class ChartDiagramAlarm {
 	 */
 	@GetMapping(value="/user/chart_group_alarms")
 	public ModelAndView getViewChartGroupAlarms() {
+		var currentDate = LocalDateTime.now().toLocalDate().toString();
+		
 		ModelAndView modelandview = new ModelAndView();
-		List<DiagAlarmGroupDTO> list = srvMonitorAlarm.getQueryAlarmGroupDto("01-07-2022", "05-07-2022", 5);
-		modelandview.addObject("list", list);
+		List<AlarmGroupDTO> listAlarmGroupDTO = srvAlarmGroup.getAlarmGroupDTO();
+		List<DiagAlarmGroupDTO> listAlarmGroup = srvMonitorAlarm.getQueryAlarmGroupDto(currentDate, currentDate, 99999);
+		modelandview.addObject("listAlarmGroupDTO", listAlarmGroupDTO);
+		modelandview.addObject("listAlarmGroup", listAlarmGroup);
 		modelandview.setViewName("user/chartalarmgroup");
 		return modelandview;
 	}

@@ -37,7 +37,6 @@
 
 <script th:inline="javascript"> 
 
-
 //The editor misinterpret express of thymeleaf
 var listFlow = [[${listGroupDiagram}]];//Fuckditor!!!
 
@@ -50,7 +49,7 @@ $(document).ready(function(){
 	const dateTo = $('#dateto').val()!= '' ? $('#dateto').val() : myDateNow();
 	$('#datefrom').val(dateFrom);
 	$('#dateto').val(dateTo);
-	chartDiagramGroup('Группы аварий');
+	chartDiagramGroup('Группы аварий', 1);
 });
 
 
@@ -82,7 +81,7 @@ $(function(){
 			        	alert('Данные не найдены. Измените параметры запроса');
 				    }else{
 		        	 listFlow = data;
-		        	 chartDiagramGroup('Группы аварий');
+		        	 chartDiagramGroup('Группы аварий', 1);
 				    }
 		        	$("#btn-filter").prop( "disabled", false);
 		        },

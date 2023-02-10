@@ -27,7 +27,7 @@ function destroyChart(){
  * Making Diagram
  * 
  */
-function chartDiagramGroup(nameLabel){
+function chartDiagramGroup(nameLabel, type){
 	
  arrChartMain = new Array();
  arrChart = new Array();
@@ -39,7 +39,13 @@ i = 0;
 _.each(listFlow, function(list) {
 	  if(list.length != 0){
 	    arrChartMain.push(list.countRow === undefined ? 0 : list.countRow);
+	    if(type == 1){ //for groups
 		arrChart.push(list.nameGroup);
+		}
+		
+	    if(type == 2){//for alarms from groups
+		arrChart.push(list.nameAlarm);
+		}
 	  }
 	  i++;
 });	

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>filtr_alarm_report</title>
+</head>
+<body>
+	<div th:fragment="fr_filtr_group_alarm_report">
+
+			<div class="row row-cols-auto justify-content-md-center" style="margin-top: 2px;">
+			
+			    <!----------------------------- Даты по таблице ------------------------------------------------------------------------>
+				
+				<div class="col  px-1" style="margin-top: 1px; margin-bottom: 1px">
+					<input value="" type="date" class="form-control pull-right form-select-sm" id="datefrom" name="datebeg" title="Only from 01-07-2022"/>
+				</div>
+				<div class="col  px-1" style="margin-top: 1px; margin-bottom: 1px">
+					<input value="" type="date" class="form-control pull-right form-select-sm" id="dateto" name="dateend" title="Only to 15-07-2022"/>
+				</div>
+						
+			    <!------------------------------------ Список выбора группы ----------------------------------------------------->
+				<div class="col-auto  px-1" id="select-group-name">
+				   <select class="form-select form-select-sm" aria-label=".form-select-sm" id="listGroupName">
+				   </select>
+				</div>
+								
+				<!----------------------------------------------------- Кнопки фильтров ------------------------------------------>
+			    <div class="col  px-0">
+					<button type="button" class="btn btn-secondary  btn-circle" id="btn-filter"  title="Фильтр">
+						<i class="bi bi-funnel"></i>
+					</button>
+				</div>
+				<div class="col  px-0">
+					<button type="button" class="btn btn-success  btn-circle" id="btn-reset"  title="Сброс">
+						<i class="bi bi-x-octagon"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+</body>
+</html>
