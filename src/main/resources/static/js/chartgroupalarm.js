@@ -28,9 +28,10 @@ function destroyChart(){
  * 
  */
 function chartDiagramGroup(nameLabel, type){
-	
+  
  arrChartMain = new Array();
  arrChart = new Array();
+ 
 	
  /**
  * Заполнение данными массивов для построения диаграммы
@@ -60,8 +61,14 @@ _.each(listFlow, function(list) {
  *
  */
 function makeCharts(idx, arrChart, arrChartMain, label){
-	addCanvas(idx);
-	chartObj[idx] = addChart(idx, arrChart, arrChartMain, label);
+    addCanvas(idx);
+    
+    var sel = $('#listTypeDiagram').val();
+    if(sel == 1){
+	   chartObj[idx] = addChart(idx, arrChart, arrChartMain, label);
+	}else if(sel == 2){
+       chartObj[idx] = addPie(idx, arrChart, arrChartMain, label);
+    }
 	return (++idx);
 }
 
@@ -73,17 +80,84 @@ function addCanvas(idx){
 	var div = document.getElementById("main_div");
 	var canvas = document.createElement('canvas');
 	canvas.setAttribute('id', 'myChart'+idx);
-	canvas.setAttribute('width', '400');
-	canvas.setAttribute('height', '100');
+	//canvas.setAttribute('width', '500');
+	canvas.setAttribute('height', '500');
 	div.appendChild(canvas);
 }
+
+
+function addPie(idx, arrayLabel, arrayData, label){
+var ctx = null;
+var myChart = null;
+ctx = document.getElementById('myChart'+idx).getContext('2d');
+
+//PIE!!!!!!!!!!!!!!!!!!!!!
+myChart = new Chart(ctx, {
+	
+    type: 'pie',
+    
+    data: {
+        labels: arrayLabel,
+        datasets: [{
+	        minBarLength: 2,
+            label: label,
+            data: arrayData,
+            backgroundColor: [
+                '#FF00FF80',
+                '#80008080',
+                '#FF000080',
+                '#80000080',
+                '#FFFF0080',
+                '#80800080',
+                '#00FF0080',
+                '#00800080',
+                '#00FFFF80',
+                '#00808080',
+                '#0000FF80',
+                '#00008080'
+            ],
+            borderColor: [
+                '#FF00FF90',
+                '#80008090',
+                '#FF000090',
+                '#80000090',
+                '#FFFF0090',
+                '#80800090',
+                '#00FF0090',
+                '#00800090',
+                '#00FFFF90',
+                '#00808090',
+                '#0000FF90',
+                '#00008090'
+            ],
+           hoverOffset: 4
+        }]
+    },
+    options: {
+	   responsive: true,
+	   //radius: '100%',
+	   maintainAspectRatio: false,
+	   	   	          
+       plugins: {
+         colors: {
+          forceOverride: true
+         }
+       }
+     }
+});
+ return myChart;
+}
+
+	
+	
+	
 
 
 function addChart(idx, arrayLabel, arrayData, label){
 var ctx = null;
 var myChart = null;
-
 ctx = document.getElementById('myChart'+idx).getContext('2d');
+
 myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -93,26 +167,39 @@ myChart = new Chart(ctx, {
             label: label,
             data: arrayData,
             backgroundColor: [
-               'rgba(255, 99, 132, 0.5)',
-                'rgba(54, 162, 235, 0.5)',
-                'rgba(255, 206, 86, 0.5)',
-                'rgba(75, 192, 192, 0.5)',
-                'rgba(153, 102, 255, 0.5)',
-                'rgba(255, 159, 164, 0.5)'
+                '#FF00FF80',
+                '#80008080',
+                '#FF000080',
+                '#80000080',
+                '#FFFF0080',
+                '#80800080',
+                '#00FF0080',
+                '#00800080',
+                '#00FFFF80',
+                '#00808080',
+                '#0000FF80',
+                '#00008080'
             ],
             borderColor: [
-                'rgba(255, 99, 132, 0.8)',
-                'rgba(54, 162, 235, 0.8)',
-                'rgba(255, 206, 86, 0.8)',
-                'rgba(75, 192, 192, 0.8)',
-                'rgba(153, 102, 255, 0.8)',
-                'rgba(255, 159, 64, 0.8)'
+                '#FF00FF90',
+                '#80008090',
+                '#FF000090',
+                '#80000090',
+                '#FFFF0090',
+                '#80800090',
+                '#00FF0090',
+                '#00800090',
+                '#00FFFF90',
+                '#00808090',
+                '#0000FF90',
+                '#00008090'
             ],
             borderWidth: 1
         }]
     },
     options: {
 	   responsive: true,
+	   maintainAspectRatio: false,
        
        plugins: {
          colors: {
