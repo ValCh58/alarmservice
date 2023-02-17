@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.qos.logback.core.util.FileSize;
 import eis.com.alarmservice.dto.AlarmNameDTO;
 import eis.com.alarmservice.dto.DiagAlarmGroupDTO;
 import eis.com.alarmservice.dto.DiagGroupDTO;
@@ -146,16 +147,16 @@ public class GetDataFromAlarmName {
 			file.transferTo( new File(upfile));
 			uploadAndInsertAlarmName.mergeTables();
 		} catch (IOException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при чтении или записи в файл CSV.");//("Errors when reading or writing a CSV file.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при чтении или записи в файл." + e.getMessage());//("Errors when reading or writing a CSV file.");
 		} catch(SQLException | InvalidResultSetAccessException ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing a sql requests.");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing.");
+		} catch (Exception exc) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errors when executing: " + exc.getMessage());
 		}finally {
 			try {
 				Files.deleteIfExists(Paths.get(upfile));
 			} catch (IOException e) {
-					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при удалении файла CSV.");
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при удалении файла: " + upfile);
 			}
 		}
 		return ResponseEntity.ok("Файл загружен успешно."); 

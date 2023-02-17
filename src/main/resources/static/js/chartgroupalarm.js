@@ -85,13 +85,14 @@ function addCanvas(idx){
 	div.appendChild(canvas);
 }
 
-
+/**
+ * Make diagram type at Pie
+ */
 function addPie(idx, arrayLabel, arrayData, label){
 var ctx = null;
 var myChart = null;
 ctx = document.getElementById('myChart'+idx).getContext('2d');
 
-//PIE!!!!!!!!!!!!!!!!!!!!!
 myChart = new Chart(ctx, {
 	
     type: 'pie',
@@ -151,7 +152,9 @@ myChart = new Chart(ctx, {
 	
 	
 	
-
+/**
+ * Make diagram type at Bars
+ */
 
 function addChart(idx, arrayLabel, arrayData, label){
 var ctx = null;
