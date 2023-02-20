@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Объекты</title>
-    <!-- link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/ -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/user.css}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/v4-shims.css">
  <!-- Bootstrap CSS -->
@@ -40,27 +40,7 @@
    function offLoader(){
 	   document.getElementById("loader").style.display = "none";
 	   }
-      
-	$(document).ready(function(){
-		var dat = myDateNow();
-      $('#dateFrom').val(dat);
-    });
-   
-	
-	  /**
-	   * Вывод текущей даты в формате YYYY-MM-DD 
-	   */
-	   /*
-	   function myDateNow(){
-	 	  var mlsk = Date.now();
-	 	  var nowDate = new Date(mlsk);
-	 	  var year = nowDate.getFullYear().toString();
-	 	  var month = (nowDate.getMonth() + 1).toString().length > 1 ? (nowDate.getMonth() + 1).toString() : '0'+(nowDate.getMonth() + 1).toString();
-	 	  var day = nowDate.getDate().toString().length > 1 ? nowDate.getDate().toString() : '0'+nowDate.getDate().toString();  
-	 	  var dat = year + '-' + month + '-' + day;
-	 	  return dat;
-	   }
-	   */   
+    */   
 	</script>
 </body>
 </html>
